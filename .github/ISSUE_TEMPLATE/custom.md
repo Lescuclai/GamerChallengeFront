@@ -9,7 +9,7 @@ assignees: ''
 
 Ready to test :
 
-- [ ] DOR / cristaires d'acceptante :
+DOR / cristaires d'acceptante :
 - [ ] titre clair
 - [ ] description claire et complète
 - [ ] liens documentation métier - Les règles métiers
