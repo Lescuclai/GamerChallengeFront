@@ -1,50 +1,39 @@
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography } from "@mui/material"
-
+import {
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Chip,
+} from "@mui/material"
+import type { ReactNode } from "react"
 
 interface VerticalCardProps {
-    image: string
-    date: Date,
-    pseudo: string,
-    title: string
+  image: string
+  text_chip: string
+  children?: ReactNode
 }
-export const VerticalCard =({image, pseudo,date,title}: VerticalCardProps) => {
-    const formatedDate = new Intl.DateTimeFormat("fr-FR").format(date)
-    return(
-        <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            height="140"
-            src={image}
-            alt="Card Image"
-          />
-          <CardContent  sx={{
-            backgroundColor:"#333333",
-            color:"#EBEBFF"
-            }}>
-            <Box display="flex" mb={1}   alignItems="center">
-                <Typography variant="h5" >
-                {pseudo}
-                </Typography>
-                <Typography marginLeft={1} >
-                {formatedDate}
-                </Typography>
-            </Box>
-            <Typography align="left" >
-                {title}
-            </Typography>
-            <CardActions className="flex justify-end">
-                <Button size="small" sx={{
-                    backgroundColor:"#8585FF", 
-                    color:"#EBEBFF",
-                    borderRadius: "9999px",     // arrondi max = style chip
-                    padding: "12px", 
-                    }}>
-                    Détails
-                </Button>
-            </CardActions>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    )
+export const VerticalCard = ({
+  image,
+  text_chip,
+  children,
+}: VerticalCardProps) => {
+  return (
+    <Card sx={{ maxWidth: 345 }}>
+      <CardActionArea>
+        <CardMedia component="img" height="140" src={image} alt="Card Image" />
+        <CardContent
+          sx={{
+            backgroundColor: "#333333",
+            color: "#EBEBFF",
+          }}
+        >
+          {children}
+          <CardActions className="flex justify-end">
+            <Chip label={text_chip} color="primary"></Chip>
+          </CardActions>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+  )
 }

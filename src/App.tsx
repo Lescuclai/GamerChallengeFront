@@ -1,9 +1,12 @@
-
-import { Route, Routes } from "react-router";
-import NotFoundPage from "./pages/notFoundPage";
-
+import { Route, Routes } from "react-router"
+import NotFoundPage from "./pages/notFoundPage"
 
 function App() {
+  // const formatted = new Date().toLocaleDateString("fr-FR", {
+  //   day: "numeric",
+  //   month: "long",
+  //   year: "numeric",
+  // })
   return (
     <>
       <Routes>
