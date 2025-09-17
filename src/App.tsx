@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router";
 import NotFoundPage from "./pages/notFoundPage";
-import { BoardCard } from "./components/BoardCard/BoardCard";
 
 function App() {
   return (
@@ -11,7 +10,6 @@ function App() {
         <Route path="/challenges/:challengeId" element={<p>Challenge</p>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      <BoardCard />
     </>
   );
 }
