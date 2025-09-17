@@ -7,7 +7,10 @@ function App() {
       <Routes>
         <Route path="/" element={<p>Home</p>} />
         <Route path="/challenges" element={<p>Challenges</p>} />
-        <Route path="/challenges/:challengeId" element={<p>Challenge</p>} />
+        <Route
+          path="/challenges/:challengeId"
+          element={<p>Challenge détails</p>}
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
