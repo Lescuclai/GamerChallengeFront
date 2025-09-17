@@ -1,8 +1,5 @@
-
-
 import { Route, Routes } from "react-router";
 import NotFoundPage from "./pages/notFoundPage";
-
 
 
 function App() {
