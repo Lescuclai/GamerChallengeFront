@@ -1,6 +1,19 @@
 @import "tailwindcss";
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  --tropical-indigo: #8585ff;
+  --periwinkle: #c2c2ff;
+  --lavander: #ebebff;
+  --eerie-black: #1f1f1f;
+  --jet: #333333;
+
+  font-family: "Nunito Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100,
+    "YTLC" 500;
+
   line-height: 1.5;
   font-weight: 400;
 
@@ -67,4 +80,5 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+
 }
