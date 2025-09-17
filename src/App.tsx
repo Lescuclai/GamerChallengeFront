@@ -1,6 +1,6 @@
-import { Route, Routes } from "react-router";
-import Layout from "./components/Layout/Layout";
-import NotFoundPage from "./pages/notFoundPage";
+import { Route, Routes } from "react-router"
+import Layout from "./components/Layout/Layout"
+import NotFoundPage from "./pages/notFoundPage"
 
 function App() {
   return (

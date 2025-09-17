@@ -1,10 +1,10 @@
-import { AppBar, Button, Toolbar, useMediaQuery } from "@mui/material";
-import Avatar from "../../assets/avatar.svg";
-import Logo from "../../assets/logo_GamerChallenges.svg";
-import LogoSmall from "../../assets/logogram.svg";
+import { AppBar, Button, Toolbar, useMediaQuery } from "@mui/material"
+import Avatar from "../../assets/avatar.svg"
+import Logo from "../../assets/logo_GamerChallenges.svg"
+import LogoSmall from "../../assets/logogram.svg"
 
 export default function Header() {
-  const isSmallScreen = useMediaQuery("(max-width:600px)");
+  const isSmallScreen = useMediaQuery("(max-width:600px)")
 
   return (
     <AppBar
@@ -51,5 +51,5 @@ export default function Header() {
         )}
       </Toolbar>
     </AppBar>
-  );
+  )
 }
