@@ -1,5 +1,7 @@
+
 import { Route, Routes } from "react-router";
 import NotFoundPage from "./pages/notFoundPage";
+
 
 function App() {
   return (
@@ -14,7 +16,7 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
