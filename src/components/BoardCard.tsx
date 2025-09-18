@@ -1,9 +1,9 @@
-import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
-import like_icon from "../../assets/like_icon.svg";
+import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material"
+import like_icon from "../../assets/like_icon.svg"
 interface BoarCardProps {
-  likes_number: number;
-  img: string;
-  description: string;
+  likes_number: number
+  img: string
+  description: string
 }
 export const BoardCard = ({
   likes_number,
@@ -57,5 +57,5 @@ export const BoardCard = ({
         </CardContent>
       </Box>
     </Card>
-  );
-};
+  )
+}
