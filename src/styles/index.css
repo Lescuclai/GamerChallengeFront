@@ -11,6 +11,8 @@
   font-variation-settings:
     "wdth" 100,
     "YTLC" 500;
+  color: var(--lavander);
+  background-color: var(--eerie-black);
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
