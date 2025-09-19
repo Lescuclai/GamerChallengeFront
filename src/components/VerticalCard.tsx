@@ -7,30 +7,43 @@ import {
   Chip,
 } from "@mui/material"
 import type { ReactNode } from "react"
+import { Link } from "react-router"
 
 interface VerticalCardProps {
   image: string
   text_chip: string
+  link_path: string
   children?: ReactNode
 }
 export const VerticalCard = ({
   image,
   text_chip,
+  link_path,
   children,
 }: VerticalCardProps) => {
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea>
-        <CardMedia component="img" height="140" src={image} alt="Card Image" />
+        <CardMedia component="img" src={image} alt="Card Image" />
         <CardContent
           sx={{
             backgroundColor: "#333333",
             color: "#EBEBFF",
+            minHeight: 250,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
           }}
         >
           {children}
           <CardActions className="flex justify-end">
-            <Chip label={text_chip} color="primary"></Chip>
+            <Chip
+              clickable
+              component={Link}
+              to={link_path}
+              label={text_chip}
+              color="primary"
+            ></Chip>
           </CardActions>
         </CardContent>
       </CardActionArea>
