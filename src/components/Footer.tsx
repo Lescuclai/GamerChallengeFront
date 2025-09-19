@@ -44,7 +44,6 @@ export default function Footer() {
             >
               Gamer Challenges © 2025 Tous droits réservés
             </Typography>
-
             <Link
               to="/cgu"
               className="text-[1rem] md:text-[1.5rem] text-white underline hover:no-underline"
