@@ -9,7 +9,7 @@ axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.warn("Non authentifié, redirection vers login")
+      console.warn("Non authentifié")
     }
     return Promise.reject(error)
   }

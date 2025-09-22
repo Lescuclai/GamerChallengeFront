@@ -1,70 +1,47 @@
 import BaseService from "./BaseService"
 import axiosClient from "./axiosClient"
-
-interface User {
-  id: number
-  pseudo: string
-  email: string
-  role: string
-  avatar: string
-}
-
-interface UserResponse {
-  message?: string
-  user: User
-}
-
-interface LoginInfos {
-  email: string
-  password: string
-}
-
-interface RegisterInfos {
-  pseudo: string
-  email: string
-  password: string
-  confirm: string
-  avatar: string
-}
+import { handleAxiosError } from "../utils/handleAxiosError"
+import type {
+  LoginInfos,
+  UserResponse,
+  User,
+  RegisterInfos,
+} from "../types/auth"
 
 class AuthService extends BaseService<User> {
   constructor() {
     super("/auth")
   }
 
-  async login(credentials: LoginInfos) {
-    const { data } = await axiosClient.post<UserResponse>(
-      `${this.endpoint}/login`,
-      credentials
+  async login(credentials: LoginInfos): Promise<UserResponse> {
+    const res = await handleAxiosError(() =>
+      axiosClient.post<UserResponse>(`${this.endpoint}/login`, credentials)
     )
-
-    return data
+    return res.data
   }
 
   async logout(): Promise<void> {
-    await axiosClient.post(`${this.endpoint}/logout`, { withCredentials: true })
-
-    // TODO : Empty zustand store
+    await handleAxiosError(() => axiosClient.post(`${this.endpoint}/logout`))
   }
 
-  async register(registerInfos: RegisterInfos) {
-    const { data } = await axiosClient.post<UserResponse>(
-      `${this.endpoint}/register`,
-      registerInfos
+  async register(registerInfos: RegisterInfos): Promise<UserResponse> {
+    const res = await handleAxiosError(() =>
+      axiosClient.post<UserResponse>(`${this.endpoint}/register`, registerInfos)
     )
-
-    return data
+    return res.data
   }
 
   async getCurrentUser(): Promise<User> {
-    const { data } = await axiosClient.get<UserResponse>(`${this.endpoint}/me`)
-    return data.user
+    const res = await handleAxiosError(() =>
+      axiosClient.get<UserResponse>(`${this.endpoint}/me`)
+    )
+    return res.data.user
   }
 
   async softDeleteUser(userId: number): Promise<void> {
-    await axiosClient.patch(`${this.endpoint}/delete/${userId}`, null)
-
-    // TODO : Empty zustand store
+    await handleAxiosError(() =>
+      axiosClient.patch(`${this.endpoint}/delete/${userId}`)
+    )
   }
 }
 

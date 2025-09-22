@@ -1,4 +1,5 @@
 import axiosClient from "./axiosClient"
+import { handleAxiosError } from "../utils/handleAxiosError"
 
 export default class BaseService<T> {
   protected endpoint: string
@@ -8,26 +9,34 @@ export default class BaseService<T> {
   }
 
   async getAll(): Promise<T[]> {
-    const { data } = await axiosClient.get(this.endpoint)
-    return data
+    const res = await handleAxiosError(() =>
+      axiosClient.get<T[]>(this.endpoint)
+    )
+    return res.data
   }
 
   async getById(id: number): Promise<T> {
-    const { data } = await axiosClient.get(`${this.endpoint}/${id}`)
-    return data
+    const res = await handleAxiosError(() =>
+      axiosClient.get<T>(`${this.endpoint}/${id}`)
+    )
+    return res.data
   }
 
   async create(payload: Partial<T>): Promise<T> {
-    const { data } = await axiosClient.post(this.endpoint, payload)
-    return data
+    const res = await handleAxiosError(() =>
+      axiosClient.post<T>(this.endpoint, payload)
+    )
+    return res.data
   }
 
   async update(id: number, payload: Partial<T>): Promise<T> {
-    const { data } = await axiosClient.patch(`${this.endpoint}/${id}`, payload)
-    return data
+    const res = await handleAxiosError(() =>
+      axiosClient.patch<T>(`${this.endpoint}/${id}`, payload)
+    )
+    return res.data
   }
 
   async delete(id: number): Promise<void> {
-    await axiosClient.delete(`${this.endpoint}/${id}`)
+    await handleAxiosError(() => axiosClient.delete(`${this.endpoint}/${id}`))
   }
 }
