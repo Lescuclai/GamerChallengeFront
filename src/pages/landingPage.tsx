@@ -97,7 +97,7 @@ export const LandingPage = () => {
     })
   }
   return (
-    <div className="flex flex-col gap-[50px]">
+    <div className="flex flex-col gap-[var(--margin-mobile)] sm:gap-[var(--margin-desktop)]">
       <Box
         sx={{
           display: "flex",
@@ -141,10 +141,10 @@ export const LandingPage = () => {
           />
         </div>
       </Box>
-      <Box className="sm:flex sm:gap-2">
+      <Box className="flex flex-col gap-[var(--margin-desktop-elements)]  sm:flex-row ">
         <div>
           <p className="text-[1.25rem]">LeaderBoard des challenges</p>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-[var(--margin-cards)]">
             {fakeData.map((item) => (
               <BoardCard
                 key={item.img}
@@ -156,8 +156,8 @@ export const LandingPage = () => {
           </div>
         </div>
         <div>
-          <p className="text-[1.25rem]">LeaderBoard des participans</p>
-          <div className="flex flex-col gap-2">
+          <p className="text-[1.25rem]">LeaderBoard des participants</p>
+          <div className="flex flex-col gap-[var(--margin-cards)]">
             {fakeEntries.map((entry) => (
               <BoardCard
                 key={entry.img}

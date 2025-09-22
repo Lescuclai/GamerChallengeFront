@@ -15,13 +15,13 @@ export const BoardCard = ({
       sx={{
         display: "flex",
         width: { xs: "342px", md: "564px" },
-        height: { xs: 50, md: 125 },
+        height: { xs: 50, md: 100 },
         color: "var(--lavander)",
       }}
     >
       <CardMedia
         component="img"
-        sx={{ width: { xs: 50, md: 125 } }}
+        sx={{ width: { xs: 50, md: 100 } }}
         image={img}
         alt="image card"
       />
@@ -41,13 +41,21 @@ export const BoardCard = ({
           }}
         >
           <Typography
-            noWrap
             sx={{
+              whiteSpace: {
+                xs: "nowrap",
+                md: "normal",
+              },
               fontSize: {
                 xs: "14px",
                 md: "16px",
               },
-              maxWidth: 200,
+              maxWidth: {
+                xs: "200px",
+                md: "300px",
+              },
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
             {description}
