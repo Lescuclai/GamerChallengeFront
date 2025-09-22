@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, useMediaQuery, Chip, Avatar } from "@mui/material"
+import { AppBar, Avatar, Chip, Toolbar, useMediaQuery } from "@mui/material"
 import avatar from "../assets/avatar.svg"
 import logo from "../assets/logo/logo_GamerChallenges.svg"
 import logoSmall from "../assets/logo/logogram.svg"
@@ -9,9 +9,9 @@ export default function Header() {
   return (
     <AppBar
       position="static"
-      sx={{ backgroundColor: "#333333", color: "#EBEBFF" }}
+      sx={{ backgroundColor: "#333333", color: "#EBEBFF", margin: "auto" }}
     >
-      <Toolbar className="w-full max-w-7xl mx-auto flex justify-between items-center">
+      <Toolbar className="w-full max-w-7xl mx-auto flex justify-between items-center align-items-center">
         <img
           src={isSmallScreen ? logoSmall : logo}
           alt="Logo Gamer Challenges"
@@ -40,7 +40,7 @@ export default function Header() {
             }}
           />
         ) : (
-          <Chip label="CONNEXION" color="primary" size="small"></Chip>
+          <Chip label="CONNEXION" color="primary" size="medium"></Chip>
         )}
       </Toolbar>
     </AppBar>
