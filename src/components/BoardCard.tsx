@@ -14,7 +14,8 @@ export const BoardCard = ({
     <Card
       sx={{
         display: "flex",
-        width: { xs: "342px", md: "564px" },
+        width: "100%",
+        maxWidth: { xs: "342px", md: "564px" },
         height: { xs: 50, md: 100 },
         color: "var(--lavander)",
       }}

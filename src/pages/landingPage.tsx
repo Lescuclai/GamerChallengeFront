@@ -2,92 +2,34 @@ import { Box, Chip, Typography } from "@mui/material"
 import { Link } from "react-router"
 import { BoardCard } from "../components/BoardCard"
 import { VerticalCard } from "../components/VerticalCard"
+import ChallengeService from "../services/ChallengeService"
+import { useQueries } from "@tanstack/react-query"
+import EntryService from "../services/EntryService"
 
 export const LandingPage = () => {
-  const fakeData = [
-    {
-      likes_number: 12,
-      img: "https://picsum.photos/seed/game1/400/300",
-      description: "Relevez le défi ultime dans ce jeu de stratégie épique !",
-    },
-    {
-      likes_number: 34,
-      img: "https://picsum.photos/seed/game2/400/300",
-      description:
-        "Un challenge rapide pour tester vos réflexes et votre vitesse.",
-    },
-    {
-      likes_number: 8,
-      img: "https://picsum.photos/seed/game3/400/300",
-      description: "Découvrez ce mini-jeu et essayez de battre le record !",
-    },
-  ]
-  const fakeEntries = [
-    {
-      likes_number: 19,
-      img: "https://picsum.photos/seed/game4/400/300",
-      description: "Un challenge coopératif où chaque joueur compte.",
-    },
-    {
-      likes_number: 27,
-      img: "https://picsum.photos/seed/game5/400/300",
-      description: "Testez vos compétences dans ce jeu d’adresse unique.",
-    },
-    {
-      likes_number: 5,
-      img: "https://picsum.photos/seed/game6/400/300",
-      description: "Un défi solo intense pour les amateurs de compétition.",
-    },
-  ]
-  const fakeNewChallenges: {
-    image: string
-    text_chip: string
-    pseudo: string
-    titre: string
-    date: string
-    id: number
-  }[] = [
-    {
-      image: "https://picsum.photos/seed/game1/400/300",
-      text_chip: "Détails",
-      pseudo: "GamerX",
-      titre: "Défi stratégique ultime",
-      date: "2025-09-18",
-      id: 1,
-    },
-    {
-      image: "https://picsum.photos/seed/game2/400/300",
-      text_chip: "Voir plus",
-      pseudo: "SpeedyPlayer",
-      titre: "Challenge express",
-      date: "2025-09-17",
-      id: 2,
-    },
-    {
-      image: "https://picsum.photos/seed/game3/400/300",
-      text_chip: "Participer",
-      pseudo: "MiniGamePro",
-      titre: "Mini-jeu record",
-      date: "2025-09-16",
-      id: 3,
-    },
-    {
-      image: "https://picsum.photos/seed/game4/400/300",
-      text_chip: "Infos",
-      pseudo: "TeamAlpha",
-      titre: "Défi coopératif",
-      date: "2025-09-15",
-      id: 4,
-    },
-    {
-      image: "https://picsum.photos/seed/game5/400/300",
-      text_chip: "Challenge",
-      pseudo: "SoloMaster",
-      titre: "Challenge solo intense",
-      date: "2025-09-14",
-      id: 5,
-    },
-  ]
+  const challengeService = new ChallengeService()
+  const entryService = new EntryService()
+
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ["newestChallenges"],
+        queryFn: () => challengeService.getNewest(),
+      },
+      {
+        queryKey: ["popularChallenges"],
+        queryFn: () => challengeService.getMostLikedChallenges(),
+      },
+      {
+        queryKey: ["popularEntry"],
+        queryFn: () => entryService.getEntryMostLikedEntry(),
+      },
+    ],
+  })
+  const newestChallenges = results[0]
+  const popularChallenges = results[1]
+  const popularEntry = results[2]
+
   const formatted = (date: string) => {
     const newDate = new Date(date)
     return newDate.toLocaleDateString("fr-FR", {
@@ -96,6 +38,7 @@ export const LandingPage = () => {
       year: "numeric",
     })
   }
+
   return (
     <div className="flex flex-col gap-[var(--margin-mobile)] sm:gap-[var(--margin-desktop)]">
       <Box
@@ -141,56 +84,62 @@ export const LandingPage = () => {
           />
         </div>
       </Box>
-      <Box className="flex flex-col gap-[var(--margin-desktop-elements)]  sm:flex-row ">
-        <div>
-          <p className="text-[1.25rem]">LeaderBoard des challenges</p>
+      <Box className="flex flex-col gap-[var(--margin-desktop-elements)] sm:flex-row">
+        <div className="flex-1 min-w-0">
+          <p className="text-[1.25rem] " style={{ marginBottom: "1rem" }}>
+            Leaderboard des challenges
+          </p>
           <div className="flex flex-col gap-[var(--margin-cards)]">
-            {fakeData.map((item) => (
+            {popularChallenges.data?.map((item) => (
               <BoardCard
-                key={item.img}
-                img={item.img}
-                description={item.description}
-                likes_number={item.likes_number}
-              ></BoardCard>
+                key={item.challenge_id}
+                img={item.game.image_url}
+                description={item.title}
+                likes_number={item._count.challengeVoters}
+              />
             ))}
           </div>
         </div>
-        <div>
-          <p className="text-[1.25rem]">LeaderBoard des participants</p>
+
+        <div className="flex-1 min-w-0">
+          <p className="text-[1.25rem]" style={{ marginBottom: "1rem" }}>
+            Leaderboard des participants
+          </p>
           <div className="flex flex-col gap-[var(--margin-cards)]">
-            {fakeEntries.map((entry) => (
+            {popularEntry.data?.map((entry) => (
               <BoardCard
-                key={entry.img}
-                img={entry.img}
-                description={entry.description}
-                likes_number={entry.likes_number}
+                key={entry.entry_id}
+                img={entry.user.avatar}
+                description={entry.title}
+                likes_number={entry._count.votes}
               />
             ))}
           </div>
         </div>
       </Box>
-      <Box
-        sx={{
-          width: { sx: "250px", md: "100%" },
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <p className="text-[1.25rem]">Nouveaux challenges</p>
-        <div className="flex flex-col gap-4 sm:flex-row">
-          {fakeNewChallenges.map((item) => (
+      <Box>
+        <p className="text-[1.25rem] " style={{ marginBottom: "1rem" }}>
+          Nouveaux challenges
+        </p>
+        <div className=" flex flex-col items-center  gap-[var(--margin-desktop-elements)]   sm:flex-row ">
+          {newestChallenges.data?.map((item) => (
             <VerticalCard
-              key={item.id}
-              image={item.image}
-              link_path={"/challenge?id=" + item.id}
-              text_chip={item.text_chip}
+              key={item.challenge_id}
+              image={item.game.image_url}
+              link_path={"/challenge?id=" + item.challenge_id}
+              text_chip="Détails"
             >
               <Box sx={{}}>
-                <Typography variant="h5">{item.pseudo}</Typography>
+                <Typography variant="h6" sx={{ color: "var(--lavander)" }}>
+                  {item.game.title}
+                </Typography>
                 <Typography>-</Typography>
-                <Typography>{formatted(item.date)}</Typography>
+                <Typography sx={{ fontSize: 12 }}>
+                  {formatted(item.created_at)}
+                </Typography>
               </Box>
-              <Typography>{item.titre}</Typography>
+              <Typography>{item.user.pseudo}</Typography>
+              <Typography>{item.title}</Typography>
             </VerticalCard>
           ))}
         </div>

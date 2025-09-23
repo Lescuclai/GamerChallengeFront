@@ -22,7 +22,14 @@ export const VerticalCard = ({
   children,
 }: VerticalCardProps) => {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card
+      sx={{
+        maxWidth: {
+          xs: "300px",
+          md: "300px",
+        },
+      }}
+    >
       <CardActionArea>
         <CardMedia component="img" src={image} alt="Card Image" />
         <CardContent
@@ -33,6 +40,17 @@ export const VerticalCard = ({
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
+            whiteSpace: {
+              xs: "nowrap",
+              md: "normal",
+            },
+            fontSize: {
+              xs: "14px",
+              md: "16px",
+            },
+
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
           {children}
