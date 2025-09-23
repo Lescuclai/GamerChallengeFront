@@ -31,3 +31,10 @@ export interface AuthState {
   setUser: (user: User | null) => void
   logout: () => void
 }
+
+export type AuthModalProps = {
+  open: boolean
+  setOpen: (value: boolean) => void
+}
+
+export type FormType = "login" | "register"

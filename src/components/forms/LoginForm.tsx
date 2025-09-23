@@ -1,13 +1,9 @@
 import { TextField } from "@mui/material"
 import type { UseFormReturn } from "react-hook-form"
-
-export interface LoginFormType {
-  email: string
-  password: string
-}
+import type { LoginInfos } from "../../types/auth"
 
 type LoginFormProps = {
-  form: UseFormReturn<LoginFormType>
+  form: UseFormReturn<LoginInfos>
 }
 
 export const LoginForm = ({ form }: LoginFormProps) => {

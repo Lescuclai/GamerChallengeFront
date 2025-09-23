@@ -3,42 +3,65 @@ import { useForm } from "react-hook-form"
 import { CustomModal } from "./CustomModal"
 import { RegisterForm } from "./forms/RegisterForm"
 import { LoginForm } from "./forms/LoginForm"
+import { useAuth } from "../hooks/useAuth"
+import { useAuthStore } from "../stores/authStore"
 import { Button } from "@mui/material"
-import type { LoginFormType } from "./forms/LoginForm"
-import type { RegisterFormType } from "./forms/RegisterForm"
-
-type AuthModalProps = {
-  open: boolean
-  setOpen: (value: boolean) => void
-}
-
-type FormType = "login" | "register"
+import type {
+  LoginInfos,
+  RegisterInfos,
+  AuthModalProps,
+  FormType,
+} from "../types/auth"
+import type { AxiosError } from "axios"
 
 export const AuthModal = ({ open, setOpen }: AuthModalProps) => {
+  const { loginAccount, registerAccount } = useAuth()
+  const setUser = useAuthStore((state) => state.setUser)
+
   const [currentFormType, setCurrentFormType] = useState<FormType>("login")
 
-  const loginForm = useForm<LoginFormType>()
-  const registerForm = useForm<RegisterFormType>()
+  const loginForm = useForm<LoginInfos>()
+  const registerForm = useForm<RegisterInfos>()
 
-  const onSubmitLogin = (data: LoginFormType) => {
-    // Hook useAuth pour login
-    console.log(data)
+  const onSubmitLogin = async (data: LoginInfos) => {
+    const { setError } = loginForm
 
-    // Si pas d'erreurs
-    setOpen(false)
-    // Sinon on affiche un message d'erreur
+    try {
+      const res = await loginAccount(data)
+      setUser(res.user)
+      onClose()
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>
+      setError("email", {
+        type: "manual",
+        message: axiosError.response?.data?.message,
+      })
+      setError("password", {
+        type: "manual",
+        message: axiosError.response?.data?.message,
+      })
+    }
   }
-  const onSubmitRegister = (data: LoginFormType) => {
-    // Hook useAuth pour register
-    console.log(data)
 
-    // Si pas d'erreurs
-    setOpen(false)
-    // Sinon on affiche un message d'erreur
+  const onSubmitRegister = async (data: RegisterInfos) => {
+    const { setError } = registerForm
+
+    try {
+      const res = await registerAccount(data)
+      setUser(res.user)
+      onClose()
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>
+      setError("email", {
+        type: "manual",
+        message: axiosError.response?.data?.message,
+      })
+    }
   }
 
   const onClose = () => {
     loginForm.reset()
+    registerForm.reset()
     setCurrentFormType("login")
     setOpen(false)
   }
@@ -54,29 +77,27 @@ export const AuthModal = ({ open, setOpen }: AuthModalProps) => {
       onClose={onClose}
       title={currentFormType === "login" ? "Connexion" : "Création de compte"}
     >
-      {currentFormType === "login" ? (
-        <>
+      <div className="flex flex-col">
+        {currentFormType === "login" ? (
           <LoginForm form={loginForm} />
-          <Button
-            type="button"
-            onClick={() => setCurrentFormType("register")}
-            style={{ cursor: "pointer" }}
-          >
-            Créer un compte
-          </Button>
-        </>
-      ) : (
-        <>
+        ) : (
           <RegisterForm form={registerForm} />
+        )}
+        <div className="flex justify-end">
           <Button
             type="button"
-            onClick={() => setCurrentFormType("login")}
-            style={{ cursor: "pointer" }}
+            onClick={() =>
+              setCurrentFormType(
+                currentFormType === "login" ? "register" : "login"
+              )
+            }
           >
-            Déjà un compte ?
+            {currentFormType === "login"
+              ? "Créer un compte"
+              : "Déjà un compte ?"}
           </Button>
-        </>
-      )}
+        </div>
+      </div>
     </CustomModal>
   )
 }

@@ -1,16 +1,9 @@
 import { TextField } from "@mui/material"
 import type { UseFormReturn } from "react-hook-form"
-
-export interface RegisterFormType {
-  avatar: string
-  email: string
-  pseudo: string
-  password: string
-  confirmPassword: string
-}
+import type { RegisterInfos } from "../../types/auth"
 
 type RegisterFormProps = {
-  form: UseFormReturn<RegisterFormType>
+  form: UseFormReturn<RegisterInfos>
 }
 
 export const RegisterForm = ({ form }: RegisterFormProps) => {
@@ -72,13 +65,13 @@ export const RegisterForm = ({ form }: RegisterFormProps) => {
         type="password"
         fullWidth
         margin="normal"
-        {...register("confirmPassword", {
+        {...register("confirm", {
           required: "Confirmation requise",
           validate: (value) =>
             value === password || "Les mots de passe ne correspondent pas",
         })}
-        error={!!errors.confirmPassword}
-        helperText={errors.confirmPassword?.message}
+        error={!!errors.confirm}
+        helperText={errors.confirm?.message}
       />
     </>
   )
