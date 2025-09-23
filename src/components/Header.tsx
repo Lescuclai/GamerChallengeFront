@@ -7,10 +7,7 @@ export default function Header() {
   const isSmallScreen = useMediaQuery("(max-width:600px)")
 
   return (
-    <AppBar
-      position="static"
-      sx={{ backgroundColor: "#333333", color: "#EBEBFF" }}
-    >
+    <AppBar position="static" sx={{ backgroundColor: "var(--jet)" }}>
       <Toolbar className="w-full max-w-7xl mx-auto flex justify-between items-center">
         <img
           src={isSmallScreen ? logoSmall : logo}
@@ -24,7 +21,6 @@ export default function Header() {
             color="primary"
             avatar={<Avatar src={avatar} alt="Avatar" />}
             sx={{
-              color: "#fff",
               paddingRight: 0,
               paddingLeft: 1,
               height: 32,
