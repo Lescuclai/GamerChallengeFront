@@ -5,6 +5,7 @@ import { VerticalCard } from "../components/VerticalCard"
 import ChallengeService from "../services/ChallengeService"
 import { useQueries } from "@tanstack/react-query"
 import EntryService from "../services/EntryService"
+import { formatted } from "../utils/formatedDate"
 
 export const LandingPage = () => {
   const challengeService = new ChallengeService()
@@ -21,23 +22,14 @@ export const LandingPage = () => {
         queryFn: () => challengeService.getMostLikedChallenges(),
       },
       {
-        queryKey: ["popularEntry"],
+        queryKey: ["popularEntries"],
         queryFn: () => entryService.getEntryMostLikedEntry(),
       },
     ],
   })
   const newestChallenges = results[0]
   const popularChallenges = results[1]
-  const popularEntry = results[2]
-
-  const formatted = (date: string) => {
-    const newDate = new Date(date)
-    return newDate.toLocaleDateString("fr-FR", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    })
-  }
+  const popularEntries = results[2]
 
   return (
     <div className="flex flex-col gap-[var(--margin-mobile)] sm:gap-[var(--margin-desktop)]">
@@ -51,7 +43,7 @@ export const LandingPage = () => {
           },
           alignItems: "center",
           fontSize: {
-            xs: "14px",
+            xs: "1rem",
             md: "1.25rem",
           },
         }}
@@ -75,7 +67,7 @@ export const LandingPage = () => {
                 md: "50%",
               },
               fontSize: {
-                xs: "14px",
+                xs: "1rem",
                 md: "1.25rem",
               },
             }}
@@ -106,12 +98,12 @@ export const LandingPage = () => {
             Leaderboard des participants
           </p>
           <div className="flex flex-col gap-[var(--margin-cards)]">
-            {popularEntry.data?.map((entry) => (
+            {popularEntries.data?.map((entry) => (
               <BoardCard
                 key={entry.entry_id}
                 img={entry.user.avatar}
                 description={entry.title}
-                likes_number={entry._count.votes}
+                likes_number={entry._count.entryVoters}
               />
             ))}
           </div>

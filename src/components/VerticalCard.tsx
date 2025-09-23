@@ -48,7 +48,6 @@ export const VerticalCard = ({
               xs: "14px",
               md: "16px",
             },
-
             overflow: "hidden",
             textOverflow: "ellipsis",
           }}

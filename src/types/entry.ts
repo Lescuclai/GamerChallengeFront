@@ -6,6 +6,6 @@ export interface Entry {
   video_url: string
   user: User
   _count: {
-    votes: number
+    entryVoters: number
   }
 }
