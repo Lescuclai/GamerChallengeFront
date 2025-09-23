@@ -1,10 +1,14 @@
-import { AppBar, Avatar, Chip, Toolbar, useMediaQuery } from "@mui/material"
+import { AppBar, Toolbar, useMediaQuery, Chip, Avatar } from "@mui/material"
+import { useState } from "react"
+import { AuthModal } from "./AuthModal"
 import avatar from "../assets/avatar.svg"
 import logo from "../assets/logo/logo_GamerChallenges.svg"
 import logoSmall from "../assets/logo/logogram.svg"
 
 export default function Header() {
   const isSmallScreen = useMediaQuery("(max-width:600px)")
+
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "var(--jet)" }}>
@@ -44,8 +48,14 @@ export default function Header() {
             }}
           />
         ) : (
-          <Chip label="CONNEXION" color="primary" size="medium" />
+          <Chip
+            label="CONNEXION"
+            color="primary"
+            size="medium"
+            onClick={() => setIsAuthModalOpen(true)}
+          ></Chip>
         )}
+        <AuthModal open={isAuthModalOpen} setOpen={setIsAuthModalOpen} />
       </Toolbar>
     </AppBar>
   )
