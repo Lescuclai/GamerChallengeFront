@@ -37,4 +37,11 @@ export type AuthModalProps = {
   setOpen: (value: boolean) => void
 }
 
+export type RegisterError = {
+  errors?: {
+    email?: string
+    pseudo?: string
+  }
+}
+
 export type FormType = "login" | "register"

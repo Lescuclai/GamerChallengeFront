@@ -11,6 +11,7 @@ import type {
   RegisterInfos,
   AuthModalProps,
   FormType,
+  RegisterError,
 } from "../types/auth"
 import type { AxiosError } from "axios"
 
@@ -50,11 +51,17 @@ export const AuthModal = ({ open, setOpen }: AuthModalProps) => {
       setUser(res.user)
       onClose()
     } catch (error) {
-      const axiosError = error as AxiosError<{ message: string }>
-      setRegisterError("email", {
-        type: "manual",
-        message: axiosError.response?.data?.message,
-      })
+      const axiosError = error as AxiosError<RegisterError>
+      const apiErrors = axiosError.response?.data.errors
+      console.log(apiErrors)
+      if (apiErrors) {
+        Object.entries(apiErrors).forEach(([key, message]) => {
+          setRegisterError(key as "email" | "pseudo", {
+            type: "manual",
+            message: message as string,
+          })
+        })
+      }
     }
   }
 
