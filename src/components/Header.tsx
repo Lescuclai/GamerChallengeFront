@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, useMediaQuery, Chip, Avatar } from "@mui/material"
+import { AppBar, Avatar, Chip, Toolbar, useMediaQuery } from "@mui/material"
 import avatar from "../assets/avatar.svg"
 import logo from "../assets/logo/logo_GamerChallenges.svg"
 import logoSmall from "../assets/logo/logogram.svg"
