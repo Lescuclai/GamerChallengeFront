@@ -32,6 +32,7 @@ export default function Header() {
             size="small"
             color="primary"
             avatar={<Avatar src={avatar} alt="Avatar" />}
+            onClick={() => setIsAuthModalOpen(true)}
             sx={{
               paddingRight: 0,
               paddingLeft: 1,

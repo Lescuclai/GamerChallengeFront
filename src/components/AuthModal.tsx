@@ -23,20 +23,21 @@ export const AuthModal = ({ open, setOpen }: AuthModalProps) => {
   const loginForm = useForm<LoginInfos>()
   const registerForm = useForm<RegisterInfos>()
 
-  const onSubmitLogin = async (data: LoginInfos) => {
-    const { setError } = loginForm
+  const { setError: setLoginError } = loginForm
+  const { setError: setRegisterError } = registerForm
 
+  const onSubmitLogin = async (data: LoginInfos) => {
     try {
       const res = await loginAccount(data)
       setUser(res.user)
       onClose()
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>
-      setError("email", {
+      setLoginError("email", {
         type: "manual",
         message: axiosError.response?.data?.message,
       })
-      setError("password", {
+      setLoginError("password", {
         type: "manual",
         message: axiosError.response?.data?.message,
       })
@@ -44,15 +45,13 @@ export const AuthModal = ({ open, setOpen }: AuthModalProps) => {
   }
 
   const onSubmitRegister = async (data: RegisterInfos) => {
-    const { setError } = registerForm
-
     try {
       const res = await registerAccount(data)
       setUser(res.user)
       onClose()
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>
-      setError("email", {
+      setRegisterError("email", {
         type: "manual",
         message: axiosError.response?.data?.message,
       })
