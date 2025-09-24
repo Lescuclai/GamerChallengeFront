@@ -11,3 +11,7 @@ export interface Challenge {
     challengeVoters: number
   }
 }
+export interface PaginationChallenge {
+  data: Challenge[]
+  nbPages: number
+}
