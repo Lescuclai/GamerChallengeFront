@@ -59,7 +59,7 @@ export const LandingPage = () => {
           </div>
           <Chip
             component={Link}
-            to={"/"}
+            to={"/challenges"}
             clickable
             sx={{
               width: {

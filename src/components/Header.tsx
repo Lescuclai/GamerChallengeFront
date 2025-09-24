@@ -2,18 +2,22 @@ import { AppBar, Avatar, Chip, Toolbar, useMediaQuery } from "@mui/material"
 import avatar from "../assets/avatar.svg"
 import logo from "../assets/logo/logo_GamerChallenges.svg"
 import logoSmall from "../assets/logo/logogram.svg"
+import { Link } from "react-router"
 
 export default function Header() {
   const isSmallScreen = useMediaQuery("(max-width:600px)")
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "var(--jet)", margin: "auto" }}>
-     <Toolbar className="w-full max-w-7xl mx-auto flex justify-between items-center align-items-center">
-        <img
-          src={isSmallScreen ? logoSmall : logo}
-          alt="Logo Gamer Challenges"
-          className="h-10"
-        />
+    <AppBar position="static" sx={{ backgroundColor: "var(--jet)" }}>
+      <Toolbar className="w-full max-w-7xl mx-auto flex justify-between items-center">
+        <Link to={"/"}>
+          <img
+            src={isSmallScreen ? logoSmall : logo}
+            alt="Logo Gamer Challenges"
+            className="h-10"
+          />
+        </Link>
+
         {isSmallScreen ? (
           <Chip
             size="small"
