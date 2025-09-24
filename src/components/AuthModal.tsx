@@ -53,7 +53,6 @@ export const AuthModal = ({ open, setOpen }: AuthModalProps) => {
     } catch (error) {
       const axiosError = error as AxiosError<RegisterError>
       const apiErrors = axiosError.response?.data.errors
-      console.log(apiErrors)
       if (apiErrors) {
         Object.entries(apiErrors).forEach(([key, message]) => {
           setRegisterError(key as "email" | "pseudo", {
