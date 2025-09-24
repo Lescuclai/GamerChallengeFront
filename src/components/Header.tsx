@@ -7,8 +7,17 @@ export default function Header() {
   const isSmallScreen = useMediaQuery("(max-width:600px)")
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "var(--jet)", margin: "auto" }}>
-     <Toolbar className="w-full max-w-7xl mx-auto flex justify-between items-center align-items-center">
+    <AppBar position="static" sx={{ backgroundColor: "var(--jet)" }}>
+      <Toolbar
+        sx={{
+          width: "100%",
+          maxWidth: "1440px",
+          margin: "0 auto",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <img
           src={isSmallScreen ? logoSmall : logo}
           alt="Logo Gamer Challenges"
@@ -35,7 +44,7 @@ export default function Header() {
             }}
           />
         ) : (
-          <Chip label="CONNEXION" color="primary" size="medium"></Chip>
+          <Chip label="CONNEXION" color="primary" size="medium" />
         )}
       </Toolbar>
     </AppBar>
