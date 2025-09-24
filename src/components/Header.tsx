@@ -9,7 +9,16 @@ export default function Header() {
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "var(--jet)" }}>
-      <Toolbar className="w-full max-w-7xl mx-auto flex justify-between items-center">
+      <Toolbar
+        sx={{
+          width: "100%",
+          maxWidth: "1440px",
+          margin: "0 auto",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Link to={"/"}>
           <img
             src={isSmallScreen ? logoSmall : logo}

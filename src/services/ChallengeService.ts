@@ -3,7 +3,7 @@ import { handleAxiosError } from "../utils/handleAxiosError"
 import axiosClient from "./axiosClient"
 import BaseService from "./BaseService"
 
-export default class ChallengeService extends BaseService<Challenge> {
+class ChallengeService extends BaseService<Challenge> {
   constructor() {
     super("/challenges")
   }
@@ -26,3 +26,4 @@ export default class ChallengeService extends BaseService<Challenge> {
     return res.data
   }
 }
+export default new ChallengeService()
