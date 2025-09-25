@@ -30,7 +30,7 @@ export default function EntryCard({
     setLiked((prev) => !prev)
   }
   return (
-    <Box marginTop={4} marginBottom={0}>
+    <Box>
       <Card
         sx={{
           backgroundColor: "var(--jet)",
