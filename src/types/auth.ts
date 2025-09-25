@@ -28,6 +28,7 @@ export interface AuthState {
   user: User | null
   isLoggedIn: boolean
   isAdmin: boolean
+  isLoading: boolean
   setUser: (user: User | null) => void
   logout: () => void
 }

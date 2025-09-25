@@ -4,8 +4,10 @@ import CGU from "./pages/CGU"
 import NotFoundPage from "./pages/notFoundPage"
 import { LandingPage } from "./pages/landingPage"
 import { ChallengesPage } from "./pages/challengesPage"
+import { useFetchCurrentUser } from "./hooks/useFetchCurrentUser"
 
 function App() {
+  useFetchCurrentUser()
   return (
     <>
       <Routes>

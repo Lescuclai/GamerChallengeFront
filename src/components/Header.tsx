@@ -1,7 +1,6 @@
 import { AppBar, Toolbar, useMediaQuery, Chip, Avatar } from "@mui/material"
 import { useState } from "react"
 import { AuthModal } from "./AuthModal"
-import { useFetchCurrentUser } from "../hooks/useFetchCurrentUser"
 import { useAuthStore } from "../stores/authStore"
 import avatar from "../assets/avatar.svg"
 import logo from "../assets/logo/logo_GamerChallenges.svg"
@@ -12,8 +11,8 @@ import AccountMenu from "./AccountMenu"
 export default function Header() {
   const isSmallScreen = useMediaQuery("(max-width:600px)")
 
-  useFetchCurrentUser()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const isFetchUserLoading = useAuthStore((state) => state.isLoading)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
 
   return (
@@ -29,40 +28,44 @@ export default function Header() {
         }}
       >
         <Link to={"/"}>
-          src={isSmallScreen ? logoSmall : logo}
-          alt="Logo Gamer Challenges" className="h-10"
-        </Link>
-        {isLoggedIn ? (
-          <AccountMenu />
-        ) : isSmallScreen ? (
-          <Chip
-            size="small"
-            color="primary"
-            avatar={<Avatar src={avatar} alt="Avatar" />}
-            onClick={() => setIsAuthModalOpen(true)}
-            sx={{
-              paddingRight: 0,
-              paddingLeft: 1,
-              height: 32,
-              ".MuiChip-avatar": {
-                width: 30,
-                height: 30,
-                marginLeft: 2,
-                marginRight: 1,
-              },
-              "&:hover": {
-                backgroundColor: "#6B6BFF",
-              },
-            }}
+          <img
+            src={isSmallScreen ? logoSmall : logo}
+            alt="Logo Gamer Challenges"
+            className="h-10"
           />
-        ) : (
-          <Chip
-            label="CONNEXION"
-            color="primary"
-            size="medium"
-            onClick={() => setIsAuthModalOpen(true)}
-          ></Chip>
-        )}
+        </Link>
+        {!isFetchUserLoading &&
+          (isLoggedIn ? (
+            <AccountMenu />
+          ) : isSmallScreen ? (
+            <Chip
+              size="small"
+              color="primary"
+              avatar={<Avatar src={avatar} alt="Avatar" />}
+              onClick={() => setIsAuthModalOpen(true)}
+              sx={{
+                paddingRight: 0,
+                paddingLeft: 1,
+                height: 32,
+                ".MuiChip-avatar": {
+                  width: 30,
+                  height: 30,
+                  marginLeft: 2,
+                  marginRight: 1,
+                },
+                "&:hover": {
+                  backgroundColor: "#6B6BFF",
+                },
+              }}
+            />
+          ) : (
+            <Chip
+              label="CONNEXION"
+              color="primary"
+              size="medium"
+              onClick={() => setIsAuthModalOpen(true)}
+            ></Chip>
+          ))}
         <AuthModal open={isAuthModalOpen} setOpen={setIsAuthModalOpen} />
       </Toolbar>
     </AppBar>
