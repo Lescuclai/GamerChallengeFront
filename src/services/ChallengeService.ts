@@ -1,9 +1,9 @@
-import type { Challenge } from "../types/challenge"
+import type { Challenge, PaginationChallenge } from "../types/challenge"
 import { handleAxiosError } from "../utils/handleAxiosError"
 import axiosClient from "./axiosClient"
 import BaseService from "./BaseService"
 
-export default class ChallengeService extends BaseService<Challenge> {
+class ChallengeService extends BaseService<Challenge> {
   constructor() {
     super("/challenges")
   }
@@ -19,4 +19,11 @@ export default class ChallengeService extends BaseService<Challenge> {
     )
     return res.data.data
   }
+  async getChallenges(page: number): Promise<PaginationChallenge> {
+    const res = await handleAxiosError(() =>
+      axiosClient.get(`${this.endpoint}?page=${page}`)
+    )
+    return res.data
+  }
 }
+export default new ChallengeService()

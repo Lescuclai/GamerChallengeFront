@@ -4,6 +4,7 @@ import { AuthModal } from "./AuthModal"
 import avatar from "../assets/avatar.svg"
 import logo from "../assets/logo/logo_GamerChallenges.svg"
 import logoSmall from "../assets/logo/logogram.svg"
+import { Link } from "react-router"
 
 export default function Header() {
   const isSmallScreen = useMediaQuery("(max-width:600px)")
@@ -22,11 +23,13 @@ export default function Header() {
           alignItems: "center",
         }}
       >
-        <img
-          src={isSmallScreen ? logoSmall : logo}
-          alt="Logo Gamer Challenges"
-          className="h-10"
-        />
+        <Link to={"/"}>
+          <img
+            src={isSmallScreen ? logoSmall : logo}
+            alt="Logo Gamer Challenges"
+            className="h-10"
+          />
+        </Link>
         {isSmallScreen ? (
           <Chip
             size="small"

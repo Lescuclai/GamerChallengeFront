@@ -60,6 +60,7 @@ export const HorizontalCard = ({
           display: "flex",
           flexDirection: "column",
           gap: 1,
+          flex: 1,
         }}
       >
         <Typography
