@@ -1,13 +1,19 @@
 import { AppBar, Toolbar, useMediaQuery, Chip, Avatar } from "@mui/material"
 import { useState } from "react"
 import { AuthModal } from "./AuthModal"
+import { useFetchCurrentUser } from "../hooks/useFetchCurrentUser"
+import { useAuthStore } from "../stores/authStore"
 import avatar from "../assets/avatar.svg"
 import logo from "../assets/logo/logo_GamerChallenges.svg"
 import logoSmall from "../assets/logo/logogram.svg"
 import { Link } from "react-router"
+import AccountMenu from "./AccountMenu"
 
 export default function Header() {
   const isSmallScreen = useMediaQuery("(max-width:600px)")
+
+  useFetchCurrentUser()
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
 
   return (
@@ -23,13 +29,12 @@ export default function Header() {
         }}
       >
         <Link to={"/"}>
-          <img
-            src={isSmallScreen ? logoSmall : logo}
-            alt="Logo Gamer Challenges"
-            className="h-10"
-          />
+          src={isSmallScreen ? logoSmall : logo}
+          alt="Logo Gamer Challenges" className="h-10"
         </Link>
-        {isSmallScreen ? (
+        {isLoggedIn ? (
+          <AccountMenu />
+        ) : isSmallScreen ? (
           <Chip
             size="small"
             color="primary"
