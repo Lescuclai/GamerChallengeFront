@@ -8,7 +8,6 @@ import { Link } from "react-router"
 
 export default function Header() {
   const isSmallScreen = useMediaQuery("(max-width:600px)")
-
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
 
   return (
