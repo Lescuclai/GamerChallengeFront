@@ -44,7 +44,13 @@ export const RegisterForm = ({ form }: RegisterFormProps) => {
         type="text"
         fullWidth
         margin="normal"
-        {...register("pseudo", { required: "Pseudo requis" })}
+        {...register("pseudo", {
+          required: "Pseudo requis",
+          maxLength: {
+            value: 50,
+            message: "Le pseudo ne peut pas dépasser 50 caractères",
+          },
+        })}
         error={!!errors.pseudo}
         helperText={errors.pseudo?.message}
       />
