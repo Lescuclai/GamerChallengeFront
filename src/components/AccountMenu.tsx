@@ -105,7 +105,19 @@ export default function AccountMenu() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <ListItem onClick={handleClose}>
-          <Avatar src={avatar} /> {pseudo}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Avatar src={avatar} />
+            <Typography
+              noWrap
+              sx={{
+                maxWidth: 175,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {pseudo}
+            </Typography>
+          </Box>
         </ListItem>
         <Divider />
         <MenuItem onClick={handleLogout}>
