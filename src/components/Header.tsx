@@ -1,25 +1,41 @@
-import { AppBar, Avatar, Chip, Toolbar, useMediaQuery } from "@mui/material"
+import { AppBar, Toolbar, useMediaQuery, Chip, Avatar } from "@mui/material"
+import { useState } from "react"
+import { AuthModal } from "./AuthModal"
 import avatar from "../assets/avatar.svg"
 import logo from "../assets/logo/logo_GamerChallenges.svg"
 import logoSmall from "../assets/logo/logogram.svg"
+import { Link } from "react-router"
 
 export default function Header() {
   const isSmallScreen = useMediaQuery("(max-width:600px)")
 
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+
   return (
     <AppBar position="static" sx={{ backgroundColor: "var(--jet)" }}>
-      <Toolbar className="w-full max-w-7xl mx-auto flex justify-between items-center">
-        <img
-          src={isSmallScreen ? logoSmall : logo}
-          alt="Logo Gamer Challenges"
-          className="h-10"
-        />
-
+      <Toolbar
+        sx={{
+          width: "100%",
+          maxWidth: "1440px",
+          margin: "0 auto",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Link to={"/"}>
+          <img
+            src={isSmallScreen ? logoSmall : logo}
+            alt="Logo Gamer Challenges"
+            className="h-10"
+          />
+        </Link>
         {isSmallScreen ? (
           <Chip
             size="small"
             color="primary"
             avatar={<Avatar src={avatar} alt="Avatar" />}
+            onClick={() => setIsAuthModalOpen(true)}
             sx={{
               paddingRight: 0,
               paddingLeft: 1,
@@ -36,8 +52,14 @@ export default function Header() {
             }}
           />
         ) : (
-          <Chip label="CONNEXION" color="primary" size="small"></Chip>
+          <Chip
+            label="CONNEXION"
+            color="primary"
+            size="medium"
+            onClick={() => setIsAuthModalOpen(true)}
+          ></Chip>
         )}
+        <AuthModal open={isAuthModalOpen} setOpen={setIsAuthModalOpen} />
       </Toolbar>
     </AppBar>
   )

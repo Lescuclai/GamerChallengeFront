@@ -8,18 +8,17 @@ import EntryService from "../services/EntryService"
 import { formatted } from "../utils/formatedDate"
 
 export const LandingPage = () => {
-  const challengeService = new ChallengeService()
   const entryService = new EntryService()
 
   const results = useQueries({
     queries: [
       {
         queryKey: ["newestChallenges"],
-        queryFn: () => challengeService.getNewest(),
+        queryFn: () => ChallengeService.getNewest(),
       },
       {
         queryKey: ["popularChallenges"],
-        queryFn: () => challengeService.getMostLikedChallenges(),
+        queryFn: () => ChallengeService.getMostLikedChallenges(),
       },
       {
         queryKey: ["popularEntries"],
@@ -59,7 +58,7 @@ export const LandingPage = () => {
           </div>
           <Chip
             component={Link}
-            to={"/"}
+            to={"/challenges"}
             clickable
             sx={{
               width: {
@@ -82,14 +81,16 @@ export const LandingPage = () => {
             Leaderboard des challenges
           </p>
           <div className="flex flex-col gap-[var(--margin-cards)]">
-            {popularChallenges.data?.map((item) => (
-              <BoardCard
-                key={item.challenge_id}
-                img={item.game.image_url}
-                description={item.title}
-                likes_number={item._count.challengeVoters}
-              />
-            ))}
+            {popularChallenges.data?.map(
+              ({ challenge_id, game, title, _count }) => (
+                <BoardCard
+                  key={challenge_id}
+                  img={game.image_url}
+                  description={title}
+                  likes_number={_count.challengeVoters}
+                />
+              )
+            )}
           </div>
         </div>
 
@@ -98,12 +99,12 @@ export const LandingPage = () => {
             Leaderboard des participants
           </p>
           <div className="flex flex-col gap-[var(--margin-cards)]">
-            {popularEntries.data?.map((entry) => (
+            {popularEntries.data?.map(({ entry_id, user, title, _count }) => (
               <BoardCard
-                key={entry.entry_id}
-                img={entry.user.avatar}
-                description={entry.title}
-                likes_number={entry._count.entryVoters}
+                key={entry_id}
+                img={user.avatar}
+                description={title}
+                likes_number={_count.entryVoters}
               />
             ))}
           </div>
@@ -114,26 +115,28 @@ export const LandingPage = () => {
           Nouveaux challenges
         </p>
         <div className=" flex flex-col items-center  gap-[var(--margin-desktop-elements)]   sm:flex-row ">
-          {newestChallenges.data?.map((item) => (
-            <VerticalCard
-              key={item.challenge_id}
-              image={item.game.image_url}
-              link_path={"/challenge?id=" + item.challenge_id}
-              text_chip="Détails"
-            >
-              <Box sx={{}}>
-                <Typography variant="h6" sx={{ color: "var(--lavander)" }}>
-                  {item.game.title}
-                </Typography>
-                <Typography>-</Typography>
-                <Typography sx={{ fontSize: 12 }}>
-                  {formatted(item.created_at)}
-                </Typography>
-              </Box>
-              <Typography>{item.user.pseudo}</Typography>
-              <Typography>{item.title}</Typography>
-            </VerticalCard>
-          ))}
+          {newestChallenges.data?.map(
+            ({ challenge_id, game, created_at, user, title }) => (
+              <VerticalCard
+                key={challenge_id}
+                image={game.image_url}
+                link_path={"/challenge?id=" + challenge_id}
+                text_chip="Détails"
+              >
+                <Box sx={{}}>
+                  <Typography variant="h6" sx={{ color: "var(--lavander)" }}>
+                    {game.title}
+                  </Typography>
+                  <Typography>-</Typography>
+                  <Typography sx={{ fontSize: 12 }}>
+                    {formatted(created_at)}
+                  </Typography>
+                </Box>
+                <Typography>{user.pseudo}</Typography>
+                <Typography>{title}</Typography>
+              </VerticalCard>
+            )
+          )}
         </div>
       </Box>
     </div>

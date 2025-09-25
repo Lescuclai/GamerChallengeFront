@@ -14,7 +14,7 @@ import ReactPlayer from "react-player"
 import avatarDefault from "../assets/avatar.svg"
 interface EntryCardProps {
   image?: string
-  pseudo: string
+  pseudo: string | number
   description: string
   videoUrl?: string
 }
