@@ -48,7 +48,7 @@ export default function AccountMenu() {
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-        <Tooltip title="Account menu">
+        <Tooltip title="Menu de compte">
           <IconButton
             onClick={handleClick}
             size="small"
