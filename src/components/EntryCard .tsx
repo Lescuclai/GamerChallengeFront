@@ -36,8 +36,12 @@ export default function EntryCard({
           backgroundColor: "var(--jet)",
           color: "var(--lavander)",
           maxWidth: {
-            xs: "300px",
+            xs: "250px",
             md: "300px",
+          },
+          minWidth: {
+            xs: "250px",
+            md: "200px",
           },
         }}
       >

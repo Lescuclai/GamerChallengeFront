@@ -3,7 +3,7 @@ import { handleAxiosError } from "../utils/handleAxiosError"
 import axiosClient from "./axiosClient"
 import BaseService from "./BaseService"
 
-export default class EntryService extends BaseService<Entry> {
+class EntryService extends BaseService<Entry> {
   constructor() {
     super("/entries")
   }
@@ -13,4 +13,13 @@ export default class EntryService extends BaseService<Entry> {
     )
     return res.data.data
   }
+  async getAllEntriesForUniqueChallenge(
+    id: number
+  ): Promise<Omit<Entry, "_count">[]> {
+    const res = await handleAxiosError(() =>
+      axiosClient.get(`${this.endpoint}/${id}`)
+    )
+    return res.data.data
+  }
 }
+export default new EntryService()
