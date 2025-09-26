@@ -40,6 +40,7 @@ export const HorizontalCard = ({
         height: { xs: 150, md: 200 },
         overflow: "hidden",
         maxWidth: { md: 900 },
+        backgroundColor: "var(--eerie-black)",
       }}
     >
       <CardMedia
