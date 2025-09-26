@@ -16,3 +16,7 @@ export interface PaginationChallenge {
   challenges: Challenge[]
   nbPages: number
 }
+
+export interface ChallengeDetails {
+  challenge: Omit<Challenge, "_count"> & { rules: string }
+}
