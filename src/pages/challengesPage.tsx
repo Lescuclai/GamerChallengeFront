@@ -1,16 +1,18 @@
-import { useQuery } from "@tanstack/react-query"
-import ChallengeService from "../services/ChallengeService"
-import { useState } from "react"
-import { PaginationCustom } from "../components/PaginationCustom"
-import { HorizontalCard } from "../components/HorizontalCard"
 import { Box, CircularProgress } from "@mui/material"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
+import ChallengeModal from "../components/ChallengeModal"
+import { HorizontalCard } from "../components/HorizontalCard"
+import { PaginationCustom } from "../components/PaginationCustom"
+import ChallengeService from "../services/ChallengeService"
+import { useAuthStore } from "../stores/authStore"
 
 export const ChallengesPage = () => {
   const [page, setPage] = useState(1)
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value)
   }
-
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const { data: response, isLoading } = useQuery({
     queryKey: ["challengesList", page],
     queryFn: () => ChallengeService.getChallenges(page),
@@ -21,6 +23,9 @@ export const ChallengesPage = () => {
       <h1 className="text-[34px] sm:text-[36px] text-center">
         Listes des challenges
       </h1>
+      <Box sx={{ display: "flex", justifyContent: "center", mb: 0, mt: -1 }}>
+        {isLoggedIn && <ChallengeModal />}
+      </Box>
       <div className="flex flex-col gap-4">
         {isLoading && (
           <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
