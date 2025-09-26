@@ -48,7 +48,7 @@ export const ChallengesPage = () => {
     return <Typography color="error">Erreur lors du chargement</Typography>
   }
   if (challengeList.length <= 0 && challengeMemberList.length <= 0) {
-    return <Typography>Aucun challenge trouvé</Typography>
+    return <Typography >Aucun challenge trouvé</Typography>
   }
   return (
     <div className="flex flex-col gap-[var(--margin-mobile)] sm:gap-[var(--margin-desktop)]">
