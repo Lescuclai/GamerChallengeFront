@@ -25,24 +25,20 @@ export default function AccountMenu() {
   const [isDeleteConfimModalOpen, setIsDeleteConfimModalOpen] = useState(false)
 
   if (!user) return null
+
   const { id, avatar, pseudo } = user
-
   const isMenuOpen = Boolean(anchorEl)
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
-
   const handleClose = () => {
     setAnchorEl(null)
   }
-
   const handleLogout = async () => {
     logoutAccount()
     localLogout()
     handleClose()
   }
-
   const handleConfirmDeleteAccount = () => {
     deleteAccount(id)
     localLogout()
@@ -75,7 +71,7 @@ export default function AccountMenu() {
           paper: {
             elevation: 0,
             sx: {
-              bgcolor: "#333",
+              bgcolor: "var(--jet)",
               color: "primary.contrastText",
               overflow: "visible",
               filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
@@ -94,7 +90,7 @@ export default function AccountMenu() {
                 right: 14,
                 width: 10,
                 height: 10,
-                bgcolor: "#333",
+                bgcolor: "var(--jet)",
                 transform: "translateY(-50%) rotate(45deg)",
                 zIndex: 0,
               },
@@ -122,16 +118,19 @@ export default function AccountMenu() {
         <Divider />
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
-            <Logout fontSize="small" sx={{ color: "white" }} />
+            <Logout fontSize="small" sx={{ color: "primary.contrastText" }} />
           </ListItemIcon>
           Logout
         </MenuItem>
         <MenuItem
           onClick={() => setIsDeleteConfimModalOpen(true)}
-          sx={{ color: "#CC3333" }}
+          sx={{ color: "var(--danger-red)" }}
         >
           <ListItemIcon>
-            <DeleteForeverIcon fontSize="small" sx={{ color: "#CC3333" }} />
+            <DeleteForeverIcon
+              fontSize="small"
+              sx={{ color: "var(--danger-red)" }}
+            />
           </ListItemIcon>
           Supprimer le compte
         </MenuItem>

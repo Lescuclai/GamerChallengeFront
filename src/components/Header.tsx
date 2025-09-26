@@ -10,7 +10,6 @@ import AccountMenu from "./AccountMenu"
 
 export default function Header() {
   const isSmallScreen = useMediaQuery("(max-width:600px)")
-
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const isFetchUserLoading = useAuthStore((state) => state.isLoading)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
@@ -54,7 +53,7 @@ export default function Header() {
                   marginRight: 1,
                 },
                 "&:hover": {
-                  backgroundColor: "#6B6BFF",
+                  backgroundColor: "var(--custom-slate-blue)",
                 },
               }}
             />
