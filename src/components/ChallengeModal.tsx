@@ -20,17 +20,37 @@ export default function ChallengeModal() {
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
-    severity: "info" as "error" | "success" | "warning" | "info",
+    severity: "success",
   })
+
+  const initialFormErrors = {
+    title: false,
+    description: false,
+    rules: false,
+    game_title: false,
+  }
+
+  const [formErrors, setFormErrors] = useState(initialFormErrors)
+
+  const initialFormData = {
+    title: "",
+    description: "",
+    rules: "",
+    game_title: "",
+  }
+
+  const [formData, setFormData] = useState(initialFormData)
+
   const handleOpen = () => setOpen(true)
+
   const handleClose = () => {
-    setFormData({
-      title: "",
-      description: "",
-      rules: "",
-      game_title: "",
-    })
+    resetModal()
     setOpen(false)
+  }
+
+  const resetModal = () => {
+    setFormData(initialFormData)
+    setFormErrors(initialFormErrors)
   }
 
   const { data: uniqueTitles = [] } = useQuery({
@@ -41,13 +61,6 @@ export default function ChallengeModal() {
     id: game.id,
     label: game.title,
   }))
-
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    rules: "",
-    game_title: "",
-  })
 
   const user = useAuthStore((state) => state.user)
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
@@ -62,22 +75,28 @@ export default function ChallengeModal() {
       ...prev,
       game_title: newValue?.label || "",
     }))
+
+    if (newValue?.label) {
+      setFormErrors((prev) => ({ ...prev, game_title: false }))
+    }
   }
 
   const handleSubmit = async () => {
     try {
+      const errors = {
+        title: !formData.title.trim(),
+        description: !formData.description.trim(),
+        rules: !formData.rules.trim(),
+        game_title: !formData.game_title.trim(),
+      }
+
       if (
         !formData.game_title ||
         !formData.title ||
         !formData.description ||
         !formData.rules
       ) {
-        setSnackbar({
-          open: true,
-          message: "Tous les champs sont obligatoires.",
-          severity: "error",
-        })
-        return
+        return setFormErrors(errors)
       }
 
       const payload = {
@@ -100,15 +119,10 @@ export default function ChallengeModal() {
         message: "Challenge envoyé avec succès !",
         severity: "success",
       })
-      handleClose()
-      setFormData({ title: "", description: "", rules: "", game_title: "" })
+      resetModal()
+      setOpen(false)
     } catch (error) {
       console.error("Erreur :", error)
-      setSnackbar({
-        open: true,
-        message: "Erreur lors de l'envoi du challenge.",
-        severity: "error",
-      })
     }
   }
 
@@ -163,15 +177,19 @@ export default function ChallengeModal() {
               label="Titre du challenge"
               name="title"
               value={formData.title}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, title: e.target.value }))
-              }
+              onChange={(e) => {
+                const value = e.target.value
+                setFormData((prev) => ({ ...prev, title: value }))
+                if (value.trim()) {
+                  setFormErrors((prev) => ({ ...prev, title: false }))
+                }
+              }}
               multiline
               rows={1}
               variant="outlined"
               fullWidth
-              inputProps={{ maxLength: 100 }}
-              required
+              error={formErrors.title}
+              helperText={formErrors.title ? "Champ obligatoire" : ""}
             />
             <TextField
               sx={{
@@ -182,12 +200,13 @@ export default function ChallengeModal() {
               label="Description"
               name="description"
               value={formData.description}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
+              onChange={(e) => {
+                const value = e.target.value
+                setFormData((prev) => ({ ...prev, description: value }))
+                if (value.trim()) {
+                  setFormErrors((prev) => ({ ...prev, description: false }))
+                }
+              }}
               multiline
               rows={1}
               variant="outlined"
@@ -196,7 +215,15 @@ export default function ChallengeModal() {
                 maxLength: 255,
                 style: { color: "var(--lavander)" },
               }}
-              required
+              FormHelperTextProps={{
+                sx: { color: "var(--lavander)" },
+              }}
+              error={formErrors.description}
+              helperText={
+                formErrors.description
+                  ? "Champ obligatoire avec min 10 caractères"
+                  : `${formData.description.length}/255 caractères`
+              }
             />
             <TextField
               sx={{
@@ -207,19 +234,26 @@ export default function ChallengeModal() {
               label="Règles"
               name="rules"
               value={formData.rules}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, rules: e.target.value }))
-              }
+              onChange={(e) => {
+                const value = e.target.value
+                setFormData((prev) => ({ ...prev, rules: value }))
+                if (value.trim()) {
+                  setFormErrors((prev) => ({ ...prev, rules: false }))
+                }
+              }}
               multiline
               rows={2}
               variant="outlined"
               fullWidth
-              inputProps={{ maxLength: 400 }}
-              helperText={`${formData.rules.length}/200 caractères`}
               FormHelperTextProps={{
                 sx: { color: "var(--lavander)" },
               }}
-              required
+              error={formErrors.rules}
+              helperText={
+                formErrors.rules
+                  ? "Champ obligatoire avec min 10 caractères"
+                  : `${formData.rules.length}/200 caractères`
+              }
             />
             <Autocomplete
               options={titleOptions}
@@ -238,12 +272,21 @@ export default function ChallengeModal() {
                     "& .MuiInputBase-input": { color: "var(--lavander)" },
                     "& .MuiInputLabel-root": { color: "var(--lavander)" },
                   }}
+                  error={formErrors.game_title}
+                  helperText={formErrors.game_title ? "Champ obligatoire" : ""}
                 />
               )}
             />
           </Box>
           <Box sx={{ display: "flex", justifyContent: "end", marginTop: 3 }}>
-            <Button color="primary" variant="contained" onClick={handleClose}>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => {
+                resetModal()
+                setOpen(false)
+              }}
+            >
               RETOUR
             </Button>
             <Button
