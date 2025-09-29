@@ -1,54 +1,112 @@
 import { useQuery } from "@tanstack/react-query"
 import ChallengeService from "../services/ChallengeService"
-import { useState } from "react"
-import { PaginationCustom } from "../components/PaginationCustom"
-import { HorizontalCard } from "../components/HorizontalCard"
-import { Box, CircularProgress } from "@mui/material"
+import { useEffect, useState } from "react"
+import { Box, CircularProgress, Typography } from "@mui/material"
+
+import { useAuthStore } from "../stores/authStore"
+import { ChallengesList } from "../components/ChallengesList"
 
 export const ChallengesPage = () => {
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const [page, setPage] = useState(1)
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handleChange = (
+    _event: React.ChangeEvent<unknown> | React.MouseEvent<unknown>,
+    value: number
+  ) => {
     setPage(value)
   }
+  useEffect(() => {
+    setPage(1)
+  }, [isLoggedIn])
 
-  const { data: response, isLoading } = useQuery({
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["challengesList", page],
     queryFn: () => ChallengeService.getChallenges(page),
+    staleTime: 2 * 60 * 1000, //Données reste "fraiches" durant 2 minutes
+    gcTime: 5 * 60 * 1000, // Cache 5 minutes
+    refetchOnWindowFocus: false, // Évite refetch intempestifs
+    refetchOnMount: false, // Utilise cache si frais
   })
+
   const challengeList = response?.challenges ?? []
+  const challengeMemberList = response?.memberChallenges ?? []
+  const totalPages = response?.nbPages
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
+  if (error) {
+    return <Typography color="error">Erreur lors du chargement</Typography>
+  }
+  if (challengeList.length <= 0 && challengeMemberList.length <= 0) {
+    return <Typography component="span">Aucun challenge trouvé</Typography>
+  }
   return (
     <div className="flex flex-col gap-[var(--margin-mobile)] sm:gap-[var(--margin-desktop)]">
       <h1 className="text-[34px] sm:text-[36px] text-center">
         Listes des challenges
       </h1>
-      <div className="flex flex-col gap-4">
-        {isLoading && (
-          <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+      <Box sx={{ marginTop: "25px" }}>
+        {isLoading ? (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
             <CircularProgress />
           </Box>
+        ) : isLoggedIn && challengeMemberList.length >= 0 ? (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "25px",
+            }}
+          >
+            <ChallengesList
+              challenges={challengeMemberList}
+              isLogIn={isLoggedIn}
+              titleSection="Mes challenges"
+            />
+            <ChallengesList
+              challenges={challengeList}
+              isLogIn={isLoggedIn}
+              titleSection="Autres challenges"
+              handleChange={handleChange}
+              nbPages={totalPages}
+              page={page}
+            />
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "25px",
+            }}
+          >
+            <ChallengesList
+              challenges={challengeList}
+              isLogIn={isLoggedIn}
+              handleChange={handleChange}
+              nbPages={totalPages}
+              page={page}
+            />
+          </Box>
         )}
-        {challengeList.map(
-          ({ challenge_id, game, title, created_at, description }) => (
-            <div key={challenge_id}>
-              <HorizontalCard
-                link_path={challenge_id}
-                img={game.image_url}
-                title={title}
-                creation_date={created_at}
-                content={description}
-                text_chip="détails"
-              />
-            </div>
-          )
-        )}
-      </div>
-      <div className="flex justify-center">
-        <PaginationCustom
-          page={page}
-          nbPages={response?.nbPages ?? 1}
-          handleChange={handleChange}
-        />
-      </div>
+      </Box>
     </div>
   )
 }

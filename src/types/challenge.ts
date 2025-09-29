@@ -13,6 +13,7 @@ export interface Challenge {
   }
 }
 export interface PaginationChallenge {
+  memberChallenges?: Challenge[]
   challenges: Challenge[]
   nbPages: number
 }
