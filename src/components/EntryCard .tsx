@@ -30,14 +30,18 @@ export default function EntryCard({
     setLiked((prev) => !prev)
   }
   return (
-    <Box marginTop={4} marginBottom={0}>
+    <Box>
       <Card
         sx={{
           backgroundColor: "var(--jet)",
           color: "var(--lavander)",
           maxWidth: {
-            xs: "300px",
+            xs: "250px",
             md: "300px",
+          },
+          minWidth: {
+            xs: "250px",
+            md: "200px",
           },
         }}
       >
