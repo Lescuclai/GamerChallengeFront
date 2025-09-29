@@ -1,36 +1,61 @@
 import { useQuery } from "@tanstack/react-query"
 import ChallengeService from "../services/ChallengeService"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Box, CircularProgress, Typography } from "@mui/material"
 
 import { useAuthStore } from "../stores/authStore"
 import { ChallengesList } from "../components/ChallengesList"
 
 export const ChallengesPage = () => {
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const [page, setPage] = useState(1)
-
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handleChange = (
+    _event: React.ChangeEvent<unknown> | React.MouseEvent<unknown>,
+    value: number
+  ) => {
     setPage(value)
   }
-  const { isLoggedIn } = useAuthStore()
+  useEffect(() => {
+    setPage(1)
+  }, [isLoggedIn])
 
-  const { data: response, isLoading } = useQuery({
-    queryKey: ["challengesList", page, isLoggedIn],
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["challengesList", page],
     queryFn: () => ChallengeService.getChallenges(page),
+    staleTime: 2 * 60 * 1000, //Données reste "fraiches" durant 2 minutes
+    gcTime: 5 * 60 * 1000, // Cache 5 minutes
+    refetchOnWindowFocus: false, // Évite refetch intempestifs
+    refetchOnMount: false, // Utilise cache si frais
   })
+
   const challengeList = response?.challenges ?? []
   const challengeMemberList = response?.memberChallenges ?? []
-  console.log(response)
+  const totalPages = response?.nbPages
 
-  if (challengeList.length <= 0)
-    return <Typography component="span">Aucun challenge trouvés</Typography>
+  if (isLoading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
 
+  if (error) {
+    return <Typography color="error">Erreur lors du chargement</Typography>
+  }
+  if (challengeList.length <= 0 && challengeMemberList.length <= 0) {
+    return <Typography component="span">Aucun challenge trouvé</Typography>
+  }
   return (
     <div className="flex flex-col gap-[var(--margin-mobile)] sm:gap-[var(--margin-desktop)]">
       <h1 className="text-[34px] sm:text-[36px] text-center">
         Listes des challenges
       </h1>
-      <div>
+      <Box sx={{ marginTop: "25px" }}>
         {isLoading ? (
           <Box
             sx={{
@@ -41,27 +66,25 @@ export const ChallengesPage = () => {
           >
             <CircularProgress />
           </Box>
-        ) : isLoggedIn && challengeMemberList.length > 0 ? (
+        ) : isLoggedIn && challengeMemberList.length >= 0 ? (
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-
               gap: "25px",
             }}
           >
             <ChallengesList
               challenges={challengeMemberList}
-              isLogged={isLoggedIn}
+              isLogIn={isLoggedIn}
               titleSection="Mes challenges"
-              isMember={true}
             />
             <ChallengesList
               challenges={challengeList}
-              isLogged={isLoggedIn}
+              isLogIn={isLoggedIn}
               titleSection="Autres challenges"
               handleChange={handleChange}
-              nbPages={response?.nbPages}
+              nbPages={totalPages}
               page={page}
             />
           </Box>
@@ -76,14 +99,14 @@ export const ChallengesPage = () => {
           >
             <ChallengesList
               challenges={challengeList}
-              isLogged={false}
+              isLogIn={isLoggedIn}
               handleChange={handleChange}
-              nbPages={response?.nbPages}
+              nbPages={totalPages}
               page={page}
             />
           </Box>
         )}
-      </div>
+      </Box>
     </div>
   )
 }
