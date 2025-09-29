@@ -16,3 +16,9 @@ export interface PaginationChallenge {
   challenges: Challenge[]
   nbPages: number
 }
+export interface ChallengeInfos {
+  title: string
+  description: string
+  rules: string
+  game_title: string
+}

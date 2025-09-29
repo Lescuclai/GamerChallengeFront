@@ -1,11 +1,6 @@
 import GameService from "../services/GameService"
 
-export const fetchGameTitles = async (): Promise<
-  { id: number; title: string }[]
-> => {
+export const fetchGameTitles = async (): Promise<string[]> => {
   const games = await GameService.getAllGames()
-  return games.map((game) => ({
-    id: game.id,
-    title: game.title,
-  }))
+  return games.map((game) => game.title)
 }
