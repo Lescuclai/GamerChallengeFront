@@ -28,3 +28,6 @@ export interface ChallengeInfos {
 export interface ChallengeDetails {
   challenge: Omit<Challenge, "_count"> & { rules: string }
 }
+export interface VoteResponse {
+  voted: boolean
+}
