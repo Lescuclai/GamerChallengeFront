@@ -8,8 +8,6 @@ import EntryService from "../services/EntryService"
 import { formatted } from "../utils/formatedDate"
 
 export const LandingPage = () => {
-  const entryService = new EntryService()
-
   const results = useQueries({
     queries: [
       {
@@ -22,7 +20,7 @@ export const LandingPage = () => {
       },
       {
         queryKey: ["popularEntries"],
-        queryFn: () => entryService.getEntryMostLikedEntry(),
+        queryFn: () => EntryService.getEntryMostLikedEntry(),
       },
     ],
   })

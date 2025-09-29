@@ -7,7 +7,7 @@ import "./styles/index.css"
 import "./styles/reset.css"
 import { theme } from "./styles/theme.ts"
 
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient()
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>

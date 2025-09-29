@@ -18,12 +18,29 @@ export const RegisterForm = ({ form }: RegisterFormProps) => {
   return (
     <>
       <TextField
-        label="Avatar URL"
-        type="url"
+        label="Avatar URL (optionnel)"
+        type="text"
         fullWidth
         margin="normal"
         {...register("avatar", {
-          required: "Avatar requis",
+          validate: (avatar) => {
+            const trimmedAvatar = avatar.trim()
+
+            if (!trimmedAvatar) return true
+
+            let url: URL
+            try {
+              url = new URL(trimmedAvatar)
+            } catch {
+              return "L'URL est invalide"
+            }
+
+            if (!/\.(jpg|jpeg|png|gif|webp|svg)$/i.test(url.pathname)) {
+              return "L'URL doit pointer vers une image"
+            }
+
+            return true
+          },
         })}
         error={!!errors.avatar}
         helperText={errors.avatar?.message}
@@ -44,7 +61,13 @@ export const RegisterForm = ({ form }: RegisterFormProps) => {
         type="text"
         fullWidth
         margin="normal"
-        {...register("pseudo", { required: "Pseudo requis" })}
+        {...register("pseudo", {
+          required: "Pseudo requis",
+          maxLength: {
+            value: 50,
+            message: "Le pseudo ne peut pas dépasser 50 caractères",
+          },
+        })}
         error={!!errors.pseudo}
         helperText={errors.pseudo?.message}
       />
@@ -56,6 +79,22 @@ export const RegisterForm = ({ form }: RegisterFormProps) => {
         {...register("password", {
           required: "Mot de passe requis",
           minLength: { value: 12, message: "Minimum 12 caractères" },
+          maxLength: { value: 100, message: "Maximum 100 caractères" },
+          validate: (passwordInput) => {
+            if (!/[a-z]/.test(passwordInput)) {
+              return "Le mot de passe doit contenir au moins une minuscule"
+            }
+            if (!/[A-Z]/.test(passwordInput)) {
+              return "Le mot de passe doit contenir au moins une majuscule"
+            }
+            if (!/[0-9]/.test(passwordInput)) {
+              return "Le mot de passe doit contenir au moins un chiffre"
+            }
+            if (!/[!@#$%^&*(),.?":{}|<>]/.test(passwordInput)) {
+              return "Le mot de passe doit contenir au moins un caractère spécial"
+            }
+            return true
+          },
         })}
         error={!!errors.password}
         helperText={errors.password?.message}
@@ -67,8 +106,9 @@ export const RegisterForm = ({ form }: RegisterFormProps) => {
         margin="normal"
         {...register("confirm", {
           required: "Confirmation requise",
-          validate: (value) =>
-            value === password || "Les mots de passe ne correspondent pas",
+          validate: (passwordInput) =>
+            passwordInput === password ||
+            "Les mots de passe ne correspondent pas",
         })}
         error={!!errors.confirm}
         helperText={errors.confirm?.message}

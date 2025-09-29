@@ -7,13 +7,15 @@ import type { User } from "../types/auth"
 export const useFetchCurrentUser = () => {
   const setUser = useAuthStore((state) => state.setUser)
 
-  const { data: user } = useQuery<User | null, Error>({
+  const { data: user, isLoading } = useQuery<User | null, Error>({
     queryKey: ["currentUser"],
     queryFn: () => AuthService.getCurrentUser(),
     retry: false,
   })
 
   useEffect(() => {
-    if (user) setUser(user)
-  }, [user, setUser])
+    if (!isLoading) {
+      setUser(user ?? null)
+    }
+  }, [user, isLoading, setUser])
 }

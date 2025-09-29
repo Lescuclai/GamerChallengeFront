@@ -12,6 +12,14 @@ export const useAuth = () => {
       AuthService.register(registerInfos),
   })
 
+  const logoutAccountMutation = useMutation({
+    mutationFn: () => AuthService.logout(),
+  })
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: (userId: number) => AuthService.softDeleteUser(userId),
+  })
+
   const loginAccount = async (credentials: LoginInfos) => {
     return loginAccountMutation.mutateAsync(credentials)
   }
@@ -20,10 +28,22 @@ export const useAuth = () => {
     return registerAccountMutation.mutateAsync(registerInfos)
   }
 
+  const logoutAccount = async () => {
+    return logoutAccountMutation.mutateAsync()
+  }
+
+  const deleteAccount = async (userId: number) => {
+    return deleteAccountMutation.mutateAsync(userId)
+  }
+
   return {
     loginAccount,
     registerAccount,
+    logoutAccount,
+    deleteAccount,
     loginAccountMutation,
     registerAccountMutation,
+    logoutAccountMutation,
+    deleteAccountMutation,
   }
 }

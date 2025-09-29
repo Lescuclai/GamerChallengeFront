@@ -1,7 +1,10 @@
 import { Pagination, Stack } from "@mui/material"
 interface PaginationCustomProps {
   nbPages: number
-  handleChange: (event: React.ChangeEvent<unknown>, value: number) => void
+  handleChange: (
+    event: React.ChangeEvent<unknown> | React.MouseEvent<unknown>,
+    value: number
+  ) => void
   page: number
 }
 export const PaginationCustom = ({

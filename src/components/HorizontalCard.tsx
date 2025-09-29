@@ -40,6 +40,7 @@ export const HorizontalCard = ({
         height: { xs: 150, md: 200 },
         overflow: "hidden",
         maxWidth: { md: 900 },
+        backgroundColor: "var(--eerie-black)",
       }}
     >
       <CardMedia
@@ -66,11 +67,19 @@ export const HorizontalCard = ({
         <Typography
           variant="h6"
           component="div"
-          sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: { xs: 1, md: 5 }, // Limite de lignes
+            WebkitBoxOrient: "vertical",
+          }}
         >
           {title}
         </Typography>
-        <Typography variant="body2">{formattedDate}</Typography>
+        <Typography sx={{ fontSize: { xs: "12px" } }} variant="body2">
+          {formattedDate}
+        </Typography>
         <Typography
           variant="body2"
           sx={{
