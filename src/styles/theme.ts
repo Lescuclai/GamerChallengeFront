@@ -34,6 +34,7 @@ export const theme = createTheme({
         },
       },
     },
+<<<<<<< HEAD
     MuiAccordion: {
       styleOverrides: {
         root: {
@@ -54,6 +55,12 @@ export const theme = createTheme({
         },
         expandIconWrapper: {
           color: "var(--lavander)",
+=======
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          color: "var(--lavander)",
+>>>>>>> 233ede4 (fix: refactor feature challenge modal  and fix bugs)
         },
       },
     },
