@@ -1,16 +1,10 @@
-import { Box, CircularProgress } from "@mui/material"
-import { useQuery } from "@tanstack/react-query"
-import ChallengeModal from "../components/ChallengeModal"
-import { HorizontalCard } from "../components/HorizontalCard"
-import { PaginationCustom } from "../components/PaginationCustom"
-import ChallengeService from "../services/ChallengeService"
-import { useAuthStore } from "../stores/authStore"
-import ChallengeService from "../services/ChallengeService"
-import { useEffect, useState } from "react"
 import { Box, CircularProgress, Typography } from "@mui/material"
-import { useAuthStore } from "../stores/authStore"
+import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import ChallengeModal from "../components/ChallengeModal"
 import { ChallengesList } from "../components/ChallengesList"
-
+import ChallengeService from "../services/ChallengeService"
+import { useAuthStore } from "../stores/authStore"
 
 export const ChallengesPage = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
@@ -21,10 +15,6 @@ export const ChallengesPage = () => {
   ) => {
     setPage(value)
   }
-
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
-  const { data: response, isLoading } = useQuery({
-
   useEffect(() => {
     setPage(1)
   }, [isLoggedIn])
@@ -34,7 +24,6 @@ export const ChallengesPage = () => {
     isLoading,
     error,
   } = useQuery({
-
     queryKey: ["challengesList", page],
     queryFn: () => ChallengeService.getChallenges(page),
     staleTime: 2 * 60 * 1000, //Données reste "fraiches" durant 2 minutes
@@ -59,21 +48,16 @@ export const ChallengesPage = () => {
     return <Typography color="error">Erreur lors du chargement</Typography>
   }
   if (challengeList.length <= 0 && challengeMemberList.length <= 0) {
-    return <Typography component="span">Aucun challenge trouvé</Typography>
+    return <Typography variant="span">Aucun challenge trouvé</Typography>
   }
   return (
     <div className="flex flex-col gap-[var(--margin-mobile)] sm:gap-[var(--margin-desktop)]">
       <h1 className="text-[34px] sm:text-[36px] text-center">
         Listes des challenges
       </h1>
-
       <Box sx={{ display: "flex", justifyContent: "center", mb: 0, mt: -1 }}>
         {isLoggedIn && <ChallengeModal />}
       </Box>
-      <div className="flex flex-col gap-4">
-        {isLoading && (
-          <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
-
       <Box sx={{ marginTop: "25px" }}>
         {isLoading ? (
           <Box
@@ -83,7 +67,6 @@ export const ChallengesPage = () => {
               alignItems: "center",
             }}
           >
-
             <CircularProgress />
           </Box>
         ) : isLoggedIn && challengeMemberList.length >= 0 ? (

@@ -34,36 +34,6 @@ export const theme = createTheme({
         },
       },
     },
-
-    MuiFormHelperText: {
-      styleOverrides: {
-        root: {
-          color: "var(--lavander)",
-
-    MuiAccordion: {
-      styleOverrides: {
-        root: {
-          color: "var(--lavander)",
-          backgroundColor: "var(--eerie-black)",
-          boxShadow: "none",
-        },
-      },
-    },
-    MuiAccordionSummary: {
-      styleOverrides: {
-        root: {
-          borderBottom: "1px solid var(--lavander)",
-          boxShadow: "none",
-          "&.Mui-expanded": {
-            borderBottom: "none",
-          },
-        },
-        expandIconWrapper: {
-          color: "var(--lavander)",
-
-        },
-      },
-    },
     MuiAccordion: {
       styleOverrides: {
         root: {
