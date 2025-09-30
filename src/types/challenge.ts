@@ -9,7 +9,6 @@ export interface Challenge {
   challenge_id: string
   game: Game
   user: User
-  userHasVoted?: boolean
   _count: {
     challengeVoters: number
   }
