@@ -3,7 +3,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import { useState } from "react"
 import { Link, useParams } from "react-router"
-import { useQueries } from "@tanstack/react-query"
+import { useQueries, useMutation } from "@tanstack/react-query"
 import EntryService from "../services/EntryService"
 import ChallengeService from "../services/ChallengeService"
 import { formatted } from "../utils/formatedDate"
@@ -41,6 +41,10 @@ export const ChallengeDetailsPage = ({
       },
     ],
   })
+  const toggleVote = useMutation({
+    mutationFn: (challengeId: number) =>
+      ChallengeService.toggleChallengeVote(challengeId),
+  })
   const challengeIsLoading = results[0]?.isLoading
   const { title, game, description, rules, created_at, user } =
     results[0]?.data?.challenge || {}
@@ -48,6 +52,12 @@ export const ChallengeDetailsPage = ({
   const entriesAreLoading = results[1]?.isLoading
   const entries = results[1]?.data?.entries || []
   const memberEntries = results[1]?.data?.memberEntries || []
+
+  const onVoteSubmit = async () => {
+    const res = await toggleVote.mutateAsync(Number(challengeId))
+    setLiked(res.voted)
+  }
+
   return (
     <Box
       sx={{
@@ -131,16 +141,15 @@ export const ChallengeDetailsPage = ({
             >
               <Chip clickable label="EDITER" color="primary"></Chip>
               <Box sx={{ display: "flex", justifyContent: "end" }}>
-                <IconButton
-                  onClick={() => setLiked((prev) => !prev)}
-                  aria-label="like"
-                >
-                  {liked ? (
-                    <FavoriteIcon sx={{ color: "var(--tropical-indigo)" }} />
-                  ) : (
-                    <FavoriteBorderIcon sx={{ color: "var(--lavander)" }} />
-                  )}
-                </IconButton>
+                {isLogIn && (
+                  <IconButton onClick={onVoteSubmit} aria-label="like">
+                    {liked ? (
+                      <FavoriteIcon sx={{ color: "var(--tropical-indigo)" }} />
+                    ) : (
+                      <FavoriteBorderIcon sx={{ color: "var(--lavander)" }} />
+                    )}
+                  </IconButton>
+                )}
               </Box>
             </Box>
           </Card>
