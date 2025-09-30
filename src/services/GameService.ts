@@ -1,16 +1,15 @@
+import type { Game } from "../types/games"
 import { handleAxiosError } from "../utils/handleAxiosError"
 import axiosClient from "./axiosClient"
+import BaseService from "./BaseService"
 
-export interface Game {
-  id: number
-  title: string
-  image_url: string
-}
-
-class GameService {
+class GameService extends BaseService<Game> {
+  constructor() {
+    super("/games")
+  }
   async getAllGames(): Promise<Game[]> {
     const res = await handleAxiosError(() =>
-      axiosClient.get<{ data: Game[] }>("/games")
+      axiosClient.get<{ data: Game[] }>(`${this.endpoint}`)
     )
     return res.data.data
   }
