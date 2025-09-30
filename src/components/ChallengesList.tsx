@@ -109,19 +109,13 @@ export const ChallengesList = ({
           width: "100%",
           maxWidth: "900px",
           alignSelf: "center",
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--margin-desktop-elements)",
         }}
       >
-        <Typography component="span">{titleSection}</Typography>
-        <Typography
-          sx={{
-            marginTop: "50px",
-            color: "var(--lavander)",
-            fontStyle: "italic",
-            fontSize: "14px",
-          }}
-        >
-          Aucun challenge pour le moment
-        </Typography>
+        <Typography variant="h5">{titleSection}</Typography>
+        <Typography variant="span">Aucun challenge pour le moment</Typography>
       </Box>
     )
   }
@@ -151,7 +145,7 @@ export const ChallengesList = ({
           />
         }
       >
-        <Typography component="h4">{titleSection}</Typography>
+        <Typography variant="h5">{titleSection}</Typography>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: 0 }}>
         <Box
