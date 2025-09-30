@@ -4,10 +4,12 @@ import type { Game } from "./games"
 export interface Challenge {
   title: string
   description: string
+  rules: string
   created_at: string
   challenge_id: string
   game: Game
   user: User
+  userHasVoted?: boolean
   _count: {
     challengeVoters: number
   }

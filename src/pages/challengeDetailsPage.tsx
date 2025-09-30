@@ -1,7 +1,7 @@
 import EntryCard from "../components/EntryCard "
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import FavoriteIcon from "@mui/icons-material/Favorite"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router"
 import { useQueries, useMutation } from "@tanstack/react-query"
 import EntryService from "../services/EntryService"
@@ -25,17 +25,18 @@ interface HorizontalCardProps {
 export const ChallengeDetailsPage = ({
   img = "https:images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
 }: HorizontalCardProps) => {
+  const currentUser = useAuthStore((state) => state.user)
   const { challengeId } = useParams()
   const isLogIn = useAuthStore((state) => state.isLoggedIn)
   const [liked, setLiked] = useState<boolean>(false)
   const results = useQueries({
     queries: [
       {
-        queryKey: ["challengeDetails", challengeId],
+        queryKey: ["challengeDetails", challengeId, currentUser?.id],
         queryFn: () => ChallengeService.getById(Number(challengeId)),
       },
       {
-        queryKey: ["challengeEntries", challengeId],
+        queryKey: ["challengeEntries", challengeId, currentUser?.id],
         queryFn: () =>
           EntryService.getAllEntriesForUniqueChallenge(Number(challengeId)),
       },
@@ -46,13 +47,18 @@ export const ChallengeDetailsPage = ({
       ChallengeService.toggleChallengeVote(challengeId),
   })
   const challengeIsLoading = results[0]?.isLoading
-  const { title, game, description, rules, created_at, user } =
-    results[0]?.data?.challenge || {}
+  const challengeData = results[0]?.data
+  const { title, game, description, rules, created_at, user, userHasVoted } =
+    challengeData || {}
+  useEffect(() => {
+    if (challengeData) {
+      setLiked(userHasVoted ?? false)
+    }
+  }, [userHasVoted, challengeData])
   const formattedDate = created_at && formatted(created_at).toString()
   const entriesAreLoading = results[1]?.isLoading
   const entries = results[1]?.data?.entries || []
   const memberEntries = results[1]?.data?.memberEntries || []
-
   const onVoteSubmit = async () => {
     const res = await toggleVote.mutateAsync(Number(challengeId))
     setLiked(res.voted)
