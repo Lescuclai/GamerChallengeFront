@@ -9,3 +9,7 @@ export interface Entry {
     entryVoters: number
   }
 }
+export interface AuthenticatedUserEntry {
+  memberEntries?: Omit<Entry, "_count">[] | []
+  entries: Omit<Entry, "_count">[] | []
+}
