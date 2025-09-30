@@ -2,7 +2,7 @@ import EntryCard from "../components/EntryCard "
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import { useState } from "react"
-import { Link, useParams } from "react-router"
+import { useParams } from "react-router"
 import { useQueries } from "@tanstack/react-query"
 import EntryService from "../services/EntryService"
 import ChallengeService from "../services/ChallengeService"
@@ -18,6 +18,7 @@ import {
   IconButton,
   CircularProgress,
 } from "@mui/material"
+import { CreateEntryModal } from "../components/CreateEntryModal"
 
 interface HorizontalCardProps {
   img: string
@@ -28,6 +29,7 @@ export const ChallengeDetailsPage = ({
   const { challengeId } = useParams()
   const isLogIn = useAuthStore((state) => state.isLoggedIn)
   const [liked, setLiked] = useState<boolean>(false)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const results = useQueries({
     queries: [
       {
@@ -170,11 +172,14 @@ export const ChallengeDetailsPage = ({
             }}
           >
             <Chip
-              clickable
-              component={Link}
+              onClick={() => setIsCreateModalOpen(true)}
               label="PARTICIPER AU CHALLENGE"
               color="primary"
             ></Chip>
+            <CreateEntryModal
+              open={isCreateModalOpen}
+              setOpen={setIsCreateModalOpen}
+            />
           </Box>
         </Box>
         <Box

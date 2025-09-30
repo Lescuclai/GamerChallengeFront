@@ -4,6 +4,7 @@ interface CustomModalProps {
   onClose: (value: boolean) => void
   title?: string
   children: React.ReactNode
+  validationButtonText?: string
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
 }
 export const CustomModal = ({
@@ -11,6 +12,7 @@ export const CustomModal = ({
   onClose,
   title,
   children,
+  validationButtonText,
   onSubmit,
 }: CustomModalProps) => {
   const style = {
@@ -62,7 +64,7 @@ export const CustomModal = ({
               variant="contained"
               type="submit"
             >
-              Envoyer
+              {validationButtonText || "Valider"}
             </Button>
           </Box>
         </form>
