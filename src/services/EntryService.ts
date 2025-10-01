@@ -26,10 +26,7 @@ class EntryService extends BaseService<Entry> {
     payload: Partial<Entry>
   ): Promise<Entry> {
     const res = await handleAxiosError(() =>
-      axiosClient.post<Entry>(
-        `${this.endpoint}/${challengeId}/newEntry`,
-        payload
-      )
+      axiosClient.post<Entry>(`${this.endpoint}/${challengeId}`, payload)
     )
     return res.data
   }
