@@ -1,4 +1,8 @@
-import type { Entry, AuthenticatedUserEntry } from "../types/entry"
+import type {
+  Entry,
+  AuthenticatedUserEntry,
+  EntryVoteResponse,
+} from "../types/entry"
 import { handleAxiosError } from "../utils/handleAxiosError"
 import axiosClient from "./axiosClient"
 import BaseService from "./BaseService"
@@ -27,6 +31,12 @@ class EntryService extends BaseService<Entry> {
   ): Promise<Entry> {
     const res = await handleAxiosError(() =>
       axiosClient.post<Entry>(`${this.endpoint}/${challengeId}`, payload)
+    )
+    return res.data
+  }
+  async toggleEntryVote(entryId: number): Promise<EntryVoteResponse> {
+    const res = await handleAxiosError(() =>
+      axiosClient.post<EntryVoteResponse>(`${this.endpoint}/${entryId}/vote`)
     )
     return res.data
   }

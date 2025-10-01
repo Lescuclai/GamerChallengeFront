@@ -12,23 +12,38 @@ import {
 import { useState } from "react"
 import ReactPlayer from "react-player"
 import avatarDefault from "../assets/avatar.svg"
+import { useAuthStore } from "../stores/authStore"
+import { useMutation } from "@tanstack/react-query"
+import EntryService from "../services/EntryService"
 interface EntryCardProps {
+  entry_id: number
   image?: string
   pseudo: string | number
   description: string
   videoUrl?: string
+  isOwner: boolean
+  userHasVoted: boolean
 }
 export default function EntryCard({
+  entry_id,
   image,
   pseudo,
   description,
   videoUrl,
+  isOwner,
+  userHasVoted,
 }: EntryCardProps) {
-  const [liked, setLiked] = useState(false)
-
-  const toggleLike = () => {
-    setLiked((prev) => !prev)
+  const [liked, setLiked] = useState(userHasVoted)
+  const isLogIn = useAuthStore((state) => state.isLoggedIn)
+  const toggleVote = useMutation({
+    mutationFn: (challengeId: number) =>
+      EntryService.toggleEntryVote(challengeId),
+  })
+  const handleVoteToggle = async () => {
+    const res = await toggleVote.mutateAsync(Number(entry_id))
+    setLiked(res.voted)
   }
+
   return (
     <Box>
       <Card
@@ -62,7 +77,7 @@ export default function EntryCard({
               m: 1,
             }}
           />
-          <Chip clickable label="EDITER" color="primary" />
+          {isOwner && <Chip clickable label="EDITER" color="primary" />}
         </Box>
         <CardContent>
           <Box
@@ -116,13 +131,15 @@ export default function EntryCard({
             </Box>
           </Box>
           <Box display="flex" justifyContent="flex-end" mt={0} mb={-2}>
-            <IconButton onClick={toggleLike} aria-label="like">
-              {liked ? (
-                <FavoriteIcon sx={{ color: "var(--tropical-indigo)" }} />
-              ) : (
-                <FavoriteBorderIcon sx={{ color: "var(--lavander)" }} />
-              )}
-            </IconButton>
+            {isLogIn && (
+              <IconButton onClick={handleVoteToggle} aria-label="like">
+                {liked ? (
+                  <FavoriteIcon sx={{ color: "var(--tropical-indigo)" }} />
+                ) : (
+                  <FavoriteBorderIcon sx={{ color: "var(--lavander)" }} />
+                )}
+              </IconButton>
+            )}
           </Box>
         </CardContent>
       </Card>

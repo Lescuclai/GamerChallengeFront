@@ -30,6 +30,6 @@ export type ChallengeDetails = Omit<Challenge, "_count"> & {
   userHasVoted: boolean
 }
 
-export interface VoteResponse {
+export interface ChallengeVoteResponse {
   voted: boolean
 }

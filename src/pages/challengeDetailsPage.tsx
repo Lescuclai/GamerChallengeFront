@@ -225,13 +225,18 @@ export const ChallengeDetailsPage = ({
                     gap: "var(--margin-desktop-elements)",
                   }}
                 >
-                  {memberEntries.map(({ entry_id, title, user }) => (
-                    <EntryCard
-                      key={entry_id}
-                      description={title}
-                      pseudo={user.pseudo}
-                    />
-                  ))}
+                  {memberEntries.map(
+                    ({ entry_id, title, user, userHasVoted }) => (
+                      <EntryCard
+                        key={entry_id}
+                        entry_id={entry_id}
+                        description={title}
+                        pseudo={user.pseudo}
+                        isOwner={true}
+                        userHasVoted={userHasVoted ?? false}
+                      />
+                    )
+                  )}
                 </Box>
               )}
             </>
@@ -266,11 +271,14 @@ export const ChallengeDetailsPage = ({
             }}
           >
             {entries &&
-              entries.map(({ entry_id, title, user }) => (
+              entries.map(({ entry_id, title, user, userHasVoted }) => (
                 <EntryCard
                   key={entry_id}
+                  entry_id={entry_id}
                   description={title}
                   pseudo={user.pseudo}
+                  isOwner={false}
+                  userHasVoted={userHasVoted ?? false}
                 />
               ))}
           </Box>

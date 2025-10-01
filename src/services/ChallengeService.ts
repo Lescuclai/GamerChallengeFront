@@ -2,7 +2,7 @@ import type {
   Challenge,
   ChallengeDetails,
   PaginationChallenge,
-  VoteResponse,
+  ChallengeVoteResponse,
 } from "../types/challenge"
 import { handleAxiosError } from "../utils/handleAxiosError"
 import axiosClient from "./axiosClient"
@@ -36,9 +36,13 @@ class ChallengeService extends BaseService<Challenge> {
     )
     return res.data
   }
-  async toggleChallengeVote(challengeId: number): Promise<VoteResponse> {
+  async toggleChallengeVote(
+    challengeId: number
+  ): Promise<ChallengeVoteResponse> {
     const res = await handleAxiosError(() =>
-      axiosClient.post<VoteResponse>(`${this.endpoint}/${challengeId}/vote`)
+      axiosClient.post<ChallengeVoteResponse>(
+        `${this.endpoint}/${challengeId}/vote`
+      )
     )
     return res.data
   }
