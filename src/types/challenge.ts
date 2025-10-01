@@ -2,10 +2,10 @@ import type { User } from "./auth"
 import type { Game } from "./games"
 
 export interface Challenge {
+  id: number
   title: string
   description: string
   created_at: string
-  challenge_id: string
   game: Game
   user: User
   _count: {

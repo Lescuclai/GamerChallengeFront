@@ -115,7 +115,7 @@ export const ChallengesList = ({
         }}
       >
         <Typography variant="h5">{titleSection}</Typography>
-        <Typography variant="span">Aucun challenge pour le moment</Typography>
+        <Typography component="span">Aucun challenge pour le moment</Typography>
       </Box>
     )
   }

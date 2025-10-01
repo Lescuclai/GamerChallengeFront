@@ -28,7 +28,6 @@ export const HorizontalCard = ({
 }: HorizontalCardProps) => {
   const UppercaseChipText = text_chip.toUpperCase()
   const formattedDate = formatted(creation_date).toString()
-
   return (
     <Card
       sx={{
@@ -104,7 +103,7 @@ export const HorizontalCard = ({
         <Chip
           clickable
           component={Link}
-          to={link_path}
+          to={`/challenges/${link_path}`}
           label={UppercaseChipText}
           color="primary"
         ></Chip>

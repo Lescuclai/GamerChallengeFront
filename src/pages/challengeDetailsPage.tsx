@@ -19,6 +19,8 @@ import {
   CircularProgress,
 } from "@mui/material"
 import { CreateEntryModal } from "../components/CreateEntryModal"
+import { ChallengeDelete } from "../components/ChallengeDelete"
+import { ChallengeEdit } from "../components/ChallengeEdit"
 
 interface HorizontalCardProps {
   img: string
@@ -51,12 +53,16 @@ export const ChallengeDetailsPage = ({
   })
   const challengeIsLoading = results[0]?.isLoading
   const challengeData = results[0]?.data
-  const { title, game, description, rules, created_at, user, userHasVoted } =
-    challengeData || {}
-  const formattedDate = created_at && formatted(created_at).toString()
-  const entriesAreLoading = results[1]?.isLoading
-  const entries = results[1]?.data?.entries || []
-  const memberEntries = results[1]?.data?.memberEntries || []
+  const {
+    title,
+    game,
+    description,
+    rules,
+    created_at,
+    user,
+    userHasVoted,
+    id,
+  } = challengeData || {}
   useEffect(() => {
     if (challengeData) {
       setLiked(userHasVoted ?? false)
@@ -148,7 +154,19 @@ export const ChallengeDetailsPage = ({
                 backgroundColor: "var(--jet)",
               }}
             >
-              <Chip clickable label="EDITER" color="primary"></Chip>
+              {user?.id === currentUser?.id && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "15px",
+                  }}
+                >
+                  <ChallengeEdit challenge={challengeData!} />
+                  <ChallengeDelete challenge_id={id!} />
+                </Box>
+              )}
+
               <Box sx={{ display: "flex", justifyContent: "end" }}>
                 {isLogIn && (
                   <IconButton onClick={handleVoteToggle} aria-label="like">
