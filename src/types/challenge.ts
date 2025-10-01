@@ -4,7 +4,6 @@ import type { Game } from "./games"
 export interface Challenge {
   title: string
   description: string
-  rules: string
   created_at: string
   challenge_id: string
   game: Game
@@ -26,9 +25,11 @@ export interface ChallengeInfos {
   game_title: string
 }
 
-export interface ChallengeDetails {
-  challenge: Omit<Challenge, "_count"> & { rules: string }
+export type ChallengeDetails = Omit<Challenge, "_count"> & {
+  rules: string
+  userHasVoted: boolean
 }
+
 export interface VoteResponse {
   voted: boolean
 }

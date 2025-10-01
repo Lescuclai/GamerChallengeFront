@@ -2,7 +2,7 @@ import EntryCard from "../components/EntryCard "
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import { useEffect, useState } from "react"
-import { Link, useParams } from "react-router"
+import { useParams } from "react-router"
 import { useQueries, useMutation } from "@tanstack/react-query"
 import EntryService from "../services/EntryService"
 import ChallengeService from "../services/ChallengeService"
@@ -33,7 +33,8 @@ export const ChallengeDetailsPage = ({
     queries: [
       {
         queryKey: ["challengeDetails", challengeId, currentUser?.id],
-        queryFn: () => ChallengeService.getById(Number(challengeId)),
+        queryFn: () =>
+          ChallengeService.getChallengeDetails(Number(challengeId)),
       },
       {
         queryKey: ["challengeEntries", challengeId, currentUser?.id],
@@ -59,7 +60,7 @@ export const ChallengeDetailsPage = ({
   const entriesAreLoading = results[1]?.isLoading
   const entries = results[1]?.data?.entries || []
   const memberEntries = results[1]?.data?.memberEntries || []
-  const onVoteSubmit = async () => {
+  const handleVoteToggle = async () => {
     const res = await toggleVote.mutateAsync(Number(challengeId))
     setLiked(res.voted)
   }
@@ -148,7 +149,7 @@ export const ChallengeDetailsPage = ({
               <Chip clickable label="EDITER" color="primary"></Chip>
               <Box sx={{ display: "flex", justifyContent: "end" }}>
                 {isLogIn && (
-                  <IconButton onClick={onVoteSubmit} aria-label="like">
+                  <IconButton onClick={handleVoteToggle} aria-label="like">
                     {liked ? (
                       <FavoriteIcon sx={{ color: "var(--tropical-indigo)" }} />
                     ) : (
@@ -186,9 +187,9 @@ export const ChallengeDetailsPage = ({
           >
             <Chip
               clickable
-              component={Link}
               label="PARTICIPER AU CHALLENGE"
               color="primary"
+              onClick={() => {}}
             ></Chip>
           </Box>
         </Box>
@@ -208,7 +209,7 @@ export const ChallengeDetailsPage = ({
                 </Box>
               )}
               {!entriesAreLoading && memberEntries.length <= 0 && (
-                <Typography variant="span">
+                <Typography component="span">
                   Aucune participation trouvée
                 </Typography>
               )}

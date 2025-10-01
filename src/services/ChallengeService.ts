@@ -1,5 +1,6 @@
 import type {
   Challenge,
+  ChallengeDetails,
   PaginationChallenge,
   VoteResponse,
 } from "../types/challenge"
@@ -10,6 +11,12 @@ import BaseService from "./BaseService"
 class ChallengeService extends BaseService<Challenge> {
   constructor() {
     super("/challenges")
+  }
+  async getChallengeDetails(challengeId: number): Promise<ChallengeDetails> {
+    const res = await handleAxiosError(() =>
+      axiosClient.get(`${this.endpoint}/${challengeId}`)
+    )
+    return res.data
   }
   async getNewest(): Promise<Challenge[]> {
     const res = await handleAxiosError(() =>
