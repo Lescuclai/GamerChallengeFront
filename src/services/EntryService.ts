@@ -21,5 +21,17 @@ class EntryService extends BaseService<Entry> {
     )
     return res.data
   }
+  async createEntry(
+    challengeId: number,
+    payload: Partial<Entry>
+  ): Promise<Entry> {
+    const res = await handleAxiosError(() =>
+      axiosClient.post<Entry>(
+        `${this.endpoint}/${challengeId}/newEntry`,
+        payload
+      )
+    )
+    return res.data
+  }
 }
 export default new EntryService()

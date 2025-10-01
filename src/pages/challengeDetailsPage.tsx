@@ -18,6 +18,7 @@ import {
   IconButton,
   CircularProgress,
 } from "@mui/material"
+import { CreateEntryModal } from "../components/CreateEntryModal"
 
 interface HorizontalCardProps {
   img: string
@@ -29,6 +30,7 @@ export const ChallengeDetailsPage = ({
   const { challengeId } = useParams()
   const isLogIn = useAuthStore((state) => state.isLoggedIn)
   const [liked, setLiked] = useState<boolean>(false)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const results = useQueries({
     queries: [
       {
@@ -64,7 +66,6 @@ export const ChallengeDetailsPage = ({
     const res = await toggleVote.mutateAsync(Number(challengeId))
     setLiked(res.voted)
   }
-
   return (
     <Box
       sx={{
@@ -186,11 +187,14 @@ export const ChallengeDetailsPage = ({
             }}
           >
             <Chip
-              clickable
+              onClick={() => setIsCreateModalOpen(true)}
               label="PARTICIPER AU CHALLENGE"
               color="primary"
-              onClick={() => {}}
             ></Chip>
+            <CreateEntryModal
+              open={isCreateModalOpen}
+              setOpen={setIsCreateModalOpen}
+            />
           </Box>
         </Box>
         <Box
