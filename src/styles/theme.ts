@@ -43,6 +43,20 @@ export const theme = createTheme({
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          color: "#EBEBFF",
+        },
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          color: "#EBEBFF",
+        },
+      },
+    },
     MuiAccordionSummary: {
       styleOverrides: {
         root: {

@@ -18,6 +18,18 @@ export interface PaginationChallenge {
   nbPages: number
 }
 
-export interface ChallengeDetails {
-  challenge: Omit<Challenge, "_count"> & { rules: string }
+export interface ChallengeInfos {
+  title: string
+  description: string
+  rules: string
+  game_title: string
+}
+
+export type ChallengeDetails = Omit<Challenge, "_count"> & {
+  rules: string
+  userHasVoted: boolean
+}
+
+export interface VoteResponse {
+  voted: boolean
 }

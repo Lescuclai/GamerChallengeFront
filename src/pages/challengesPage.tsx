@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query"
-import ChallengeService from "../services/ChallengeService"
-import { useEffect, useState } from "react"
 import { Box, CircularProgress, Typography } from "@mui/material"
-
-import { useAuthStore } from "../stores/authStore"
+import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import ChallengeModal from "../components/ChallengeModal"
 import { ChallengesList } from "../components/ChallengesList"
+import ChallengeService from "../services/ChallengeService"
+import { useAuthStore } from "../stores/authStore"
 
 export const ChallengesPage = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
@@ -48,13 +48,16 @@ export const ChallengesPage = () => {
     return <Typography color="error">Erreur lors du chargement</Typography>
   }
   if (challengeList.length <= 0 && challengeMemberList.length <= 0) {
-    return <Typography variant="span">Aucun challenge trouvé</Typography>
+    return <Typography>Aucun challenge trouvé</Typography>
   }
   return (
     <div className="flex flex-col gap-[var(--margin-mobile)] sm:gap-[var(--margin-desktop)]">
       <h1 className="text-[34px] sm:text-[36px] text-center">
         Listes des challenges
       </h1>
+      <Box sx={{ display: "flex", justifyContent: "center", mb: 0, mt: -1 }}>
+        {isLoggedIn && <ChallengeModal />}
+      </Box>
       <Box sx={{ marginTop: "25px" }}>
         {isLoading ? (
           <Box
