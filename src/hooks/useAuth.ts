@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
 import type { LoginInfos, RegisterInfos } from "../types/auth"
 import AuthService from "../services/AuthService"
+import { queryClient } from "../main"
 
 export const useAuth = () => {
   const loginAccountMutation = useMutation({
@@ -21,15 +22,21 @@ export const useAuth = () => {
   })
 
   const loginAccount = async (credentials: LoginInfos) => {
-    return loginAccountMutation.mutateAsync(credentials)
+    const logIn = loginAccountMutation.mutateAsync(credentials)
+    queryClient.invalidateQueries() // Clear all cached queries
+    return logIn
   }
 
   const registerAccount = async (registerInfos: RegisterInfos) => {
-    return registerAccountMutation.mutateAsync(registerInfos)
+    const register = registerAccountMutation.mutateAsync(registerInfos)
+    queryClient.invalidateQueries() // Clear all cached queries
+    return register
   }
 
   const logoutAccount = async () => {
-    return logoutAccountMutation.mutateAsync()
+    const logout = logoutAccountMutation.mutateAsync()
+    queryClient.invalidateQueries() // Clear all cached queries
+    return logout
   }
 
   const deleteAccount = async (userId: number) => {
