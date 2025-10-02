@@ -37,7 +37,6 @@ export const ChallengesPage = () => {
   const challengeList = response?.challenges ?? []
   const challengeMemberList = response?.memberChallenges ?? []
   const totalPages = response?.nbPages
-
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
@@ -45,12 +44,11 @@ export const ChallengesPage = () => {
       </Box>
     )
   }
-
   if (error) {
     return <Typography color="error">Erreur lors du chargement</Typography>
   }
   if (challengeList.length <= 0 && challengeMemberList.length <= 0) {
-    return <Typography>Aucun challenge trouvé</Typography>
+    return <Typography component="span">Aucun challenge trouvé</Typography>
   }
   return (
     <Box

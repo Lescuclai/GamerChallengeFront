@@ -55,19 +55,29 @@ export const ChallengesList = ({
               <VerticalCard
                 key={challenge_id}
                 image={game.image_url}
-                link_path={"/challenge?id=" + challenge_id}
+                link_path={"/challenge/" + challenge_id}
                 text_chip="Détails"
               >
-                <Box sx={{}}>
+                <Box>
                   <Typography variant="h6" sx={{ color: "var(--lavander)" }}>
                     {game.title}
                   </Typography>
                   <Typography>-</Typography>
-                  <Typography sx={{ fontSize: 12 }}>
-                    {formatted(created_at)}
-                  </Typography>
-                  <Typography>{description}</Typography>
+                  <Typography>{formatted(created_at)}</Typography>
                 </Box>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: 14,
+                    display: "-webkit-box",
+                    WebkitLineClamp: { xs: 3, md: 3 }, // Limite de lignes
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {title}
+                </Typography>
               </VerticalCard>
             )}
           </Box>
@@ -115,7 +125,7 @@ export const ChallengesList = ({
         }}
       >
         <Typography variant="h5">{titleSection}</Typography>
-        <Typography variant="span">Aucun challenge pour le moment</Typography>
+        <Typography component="span">Aucun challenge pour le moment</Typography>
       </Box>
     )
   }

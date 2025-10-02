@@ -19,9 +19,11 @@ import {
   CircularProgress,
 } from "@mui/material"
 import { CreateEntryModal } from "../components/CreateEntryModal"
+import { ChallengeDelete } from "../components/ChallengeDelete"
+import { ChallengeEdit } from "../components/ChallengeEdit"
 
 interface HorizontalCardProps {
-  img: string
+  img?: string
 }
 export const ChallengeDetailsPage = ({
   img = "https:images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
@@ -51,8 +53,16 @@ export const ChallengeDetailsPage = ({
   })
   const challengeIsLoading = results[0]?.isLoading
   const challengeData = results[0]?.data
-  const { title, game, description, rules, created_at, user, userHasVoted } =
-    challengeData || {}
+  const {
+    title,
+    game,
+    description,
+    rules,
+    created_at,
+    user,
+    userHasVoted,
+    challenge_id,
+  } = challengeData || {}
   const formattedDate = created_at && formatted(created_at).toString()
   const entriesAreLoading = results[1]?.isLoading
   const entries = results[1]?.data?.entries || []
@@ -148,7 +158,18 @@ export const ChallengeDetailsPage = ({
                 backgroundColor: "var(--jet)",
               }}
             >
-              <Chip clickable label="EDITER" color="primary"></Chip>
+              {user?.id === currentUser?.id && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "15px",
+                  }}
+                >
+                  <ChallengeEdit challenge={challengeData!} />
+                  <ChallengeDelete challenge_id={challenge_id!} />
+                </Box>
+              )}
               <Box sx={{ display: "flex", justifyContent: "end" }}>
                 {isLogIn && (
                   <IconButton onClick={handleVoteToggle} aria-label="like">

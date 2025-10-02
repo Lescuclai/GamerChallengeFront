@@ -1,8 +1,8 @@
 import type {
   Challenge,
   ChallengeDetails,
-  PaginationChallenge,
   ChallengeVoteResponse,
+  PaginationChallenge,
 } from "../types/challenge"
 import { handleAxiosError } from "../utils/handleAxiosError"
 import axiosClient from "./axiosClient"
@@ -35,6 +35,10 @@ class ChallengeService extends BaseService<Challenge> {
       axiosClient.get(`${this.endpoint}?page=${page}`)
     )
     return res.data
+  }
+  async deleteChallenge(challenge_id: number): Promise<void> {
+    const res = await this.delete(challenge_id)
+    return res
   }
   async toggleChallengeVote(
     challengeId: number

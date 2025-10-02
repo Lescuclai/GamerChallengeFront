@@ -1,27 +1,37 @@
 import { Autocomplete, TextField } from "@mui/material"
 import { useQuery } from "@tanstack/react-query"
 import { Controller, type UseFormReturn } from "react-hook-form"
-import type { ChallengeInfos } from "../../types/challenge"
+import type { ChallengeDetails, ChallengeInfos } from "../../types/challenge"
 import { fetchGameTitles } from "../../utils/gameTitles"
+import { useEffect } from "react"
 
 type ChallengeFormProps = {
   form: UseFormReturn<ChallengeInfos>
+  challenge?: ChallengeDetails
 }
 
-export const ChallengeForm = ({ form }: ChallengeFormProps) => {
+export const ChallengeForm = ({ form, challenge }: ChallengeFormProps) => {
   const {
     register,
     control,
     watch,
-    setValue,
-    trigger,
     formState: { errors },
+    reset,
   } = form
-
   const { data: gameOptions = [] } = useQuery({
     queryKey: ["gameOptions"],
     queryFn: fetchGameTitles,
   })
+  useEffect(() => {
+    if (challenge) {
+      reset({
+        title: challenge.title,
+        description: challenge.description,
+        rules: challenge.rules,
+        game_title: challenge.game.title,
+      })
+    }
+  }, [challenge, reset])
   return (
     <>
       <TextField
@@ -34,10 +44,11 @@ export const ChallengeForm = ({ form }: ChallengeFormProps) => {
           maxLength: { value: 100, message: "Maximum 100 caractères" },
         })}
         error={!!errors.title}
-        helperText={errors.title?.message}
-        sx={{
-          marginBottom: 2,
-        }}
+        helperText={
+          errors.title?.message ||
+          `${watch("title")?.length || 0}/100 caractères`
+        }
+        sx={{ marginBottom: 2 }}
         multiline
         rows={1}
         variant="outlined"
@@ -49,20 +60,13 @@ export const ChallengeForm = ({ form }: ChallengeFormProps) => {
         margin="normal"
         {...register("description", {
           required: "champ requis",
-          maxLength: { value: 100, message: "Maximum 100 caractères" },
+          maxLength: { value: 200, message: "Maximum 200 caractères" },
           minLength: { value: 10, message: "Minimum 10 caractères" },
         })}
-        sx={{
-          marginBottom: 2,
-        }}
-        name="description"
+        sx={{ marginBottom: 2 }}
         multiline
         rows={1}
         variant="outlined"
-        onChange={(e) => {
-          setValue("description", e.target.value)
-          trigger("description")
-        }}
         error={!!errors.description}
         helperText={
           errors.description?.message ||
@@ -76,17 +80,12 @@ export const ChallengeForm = ({ form }: ChallengeFormProps) => {
         margin="normal"
         {...register("rules", {
           required: "champ requis",
-          maxLength: { value: 100, message: "Maximum 100 caractères" },
+          maxLength: { value: 200, message: "Maximum 200 caractères" },
           minLength: { value: 10, message: "Minimum 10 caractères" },
         })}
         multiline
         rows={1}
         variant="outlined"
-        value={watch("rules") || ""}
-        onChange={(e) => {
-          setValue("rules", e.target.value)
-          trigger("rules")
-        }}
         error={!!errors.rules}
         helperText={
           errors.rules?.message ||
@@ -102,7 +101,7 @@ export const ChallengeForm = ({ form }: ChallengeFormProps) => {
             {...field}
             options={gameOptions}
             getOptionLabel={(option) => option}
-            value={field.value}
+            value={field.value || null}
             onChange={(_, value) => field.onChange(value)}
             renderInput={(params) => (
               <TextField
@@ -111,6 +110,8 @@ export const ChallengeForm = ({ form }: ChallengeFormProps) => {
                 type="text"
                 fullWidth
                 margin="normal"
+                error={!!errors.game_title}
+                helperText={errors.game_title?.message}
               />
             )}
           />

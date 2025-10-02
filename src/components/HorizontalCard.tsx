@@ -10,7 +10,7 @@ import { Link } from "react-router"
 import { formatted } from "../utils/formatedDate"
 
 interface HorizontalCardProps {
-  link_path: string
+  link_path: number
   img: string
   text_chip: string
   title: string
@@ -28,7 +28,6 @@ export const HorizontalCard = ({
 }: HorizontalCardProps) => {
   const UppercaseChipText = text_chip.toUpperCase()
   const formattedDate = formatted(creation_date).toString()
-
   return (
     <Card
       sx={{
@@ -104,7 +103,7 @@ export const HorizontalCard = ({
         <Chip
           clickable
           component={Link}
-          to={link_path}
+          to={`/challenges/${link_path}`}
           label={UppercaseChipText}
           color="primary"
         ></Chip>
