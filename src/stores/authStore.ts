@@ -6,6 +6,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   isLoggedIn: false,
   isAdmin: false,
   isLoading: true,
+  accessToken: null,
 
   setUser: (user) =>
     set({
@@ -21,5 +22,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       isLoggedIn: false,
       isAdmin: false,
       isLoading: false,
+      accessToken: null,
     }),
+
+  setAccessToken: (token: string | null) => set({ accessToken: token }),
 }))
