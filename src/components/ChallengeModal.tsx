@@ -1,4 +1,4 @@
-import { Alert, Chip, Snackbar } from "@mui/material"
+import { Alert, Snackbar } from "@mui/material"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import ChallengeService from "../services/ChallengeService"
@@ -7,11 +7,15 @@ import type { ChallengeInfos } from "../types/challenge"
 import { CustomModal } from "./CustomModal"
 import { ChallengeForm } from "./forms/ChallengeForm"
 
-export default function ChallengeModal() {
-  const [open, setOpen] = useState(false)
+export default function ChallengeModal({
+  open,
+  setOpen,
+}: {
+  open: boolean
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const challengeForm = useForm<ChallengeInfos>()
-  const handleOpen = () => setOpen(true)
   const handleClose = () => {
     challengeForm.reset()
     setOpen(false)
@@ -27,12 +31,6 @@ export default function ChallengeModal() {
   }
   return (
     <>
-      <Chip
-        label="CREER CHALLENGE"
-        color="primary"
-        size="medium"
-        onClick={handleOpen}
-      ></Chip>
       <CustomModal
         open={open}
         onSubmit={challengeForm.handleSubmit(onSubmitChallenge)}

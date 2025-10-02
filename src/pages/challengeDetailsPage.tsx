@@ -39,7 +39,7 @@ export const ChallengeDetailsPage = ({
           ChallengeService.getChallengeDetails(Number(challengeId)),
       },
       {
-        queryKey: ["challengeEntries", challengeId, currentUser?.id],
+        queryKey: ["challengeEntries", challengeId, isLogIn],
         queryFn: () =>
           EntryService.getAllEntriesForUniqueChallenge(Number(challengeId)),
       },
@@ -53,15 +53,16 @@ export const ChallengeDetailsPage = ({
   const challengeData = results[0]?.data
   const { title, game, description, rules, created_at, user, userHasVoted } =
     challengeData || {}
+  const formattedDate = created_at && formatted(created_at).toString()
+  const entriesAreLoading = results[1]?.isLoading
+  const entries = results[1]?.data?.entries || []
+  const memberEntries = results[1]?.data?.memberEntries || []
   useEffect(() => {
     if (challengeData) {
       setLiked(userHasVoted ?? false)
     }
   }, [userHasVoted, challengeData])
-  const formattedDate = created_at && formatted(created_at).toString()
-  const entriesAreLoading = results[1]?.isLoading
-  const entries = results[1]?.data?.entries || []
-  const memberEntries = results[1]?.data?.memberEntries || []
+
   const handleVoteToggle = async () => {
     const res = await toggleVote.mutateAsync(Number(challengeId))
     setLiked(res.voted)
@@ -180,22 +181,24 @@ export const ChallengeDetailsPage = ({
           <Typography variant="h4" sx={{ textAlign: "center" }}>
             Participations
           </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Chip
-              onClick={() => setIsCreateModalOpen(true)}
-              label="PARTICIPER AU CHALLENGE"
-              color="primary"
-            ></Chip>
-            <CreateEntryModal
-              open={isCreateModalOpen}
-              setOpen={setIsCreateModalOpen}
-            />
-          </Box>
+          {isLogIn && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Chip
+                onClick={() => setIsCreateModalOpen(true)}
+                label="PARTICIPER AU CHALLENGE"
+                color="primary"
+              ></Chip>
+              <CreateEntryModal
+                open={isCreateModalOpen}
+                setOpen={setIsCreateModalOpen}
+              />
+            </Box>
+          )}
         </Box>
         <Box
           sx={{
@@ -257,7 +260,7 @@ export const ChallengeDetailsPage = ({
               <CircularProgress />
             </Box>
           )}
-          {entries.length <= 0 && (
+          {!entriesAreLoading && entries.length <= 0 && (
             <Typography component="span">
               Aucune participation trouvée
             </Typography>

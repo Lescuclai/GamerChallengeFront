@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Typography } from "@mui/material"
+import { Box, Chip, CircularProgress, Typography } from "@mui/material"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import ChallengeModal from "../components/ChallengeModal"
@@ -9,6 +9,8 @@ import { useAuthStore } from "../stores/authStore"
 export const ChallengesPage = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const [page, setPage] = useState(1)
+  const [isCreateChallengeModalOpen, setIsCreateChallengeModalOpen] =
+    useState(false)
   const handleChange = (
     _event: React.ChangeEvent<unknown> | React.MouseEvent<unknown>,
     value: number
@@ -51,14 +53,36 @@ export const ChallengesPage = () => {
     return <Typography>Aucun challenge trouvé</Typography>
   }
   return (
-    <div className="flex flex-col gap-[var(--margin-mobile)] sm:gap-[var(--margin-desktop)]">
-      <h1 className="text-[34px] sm:text-[36px] text-center">
-        Listes des challenges
-      </h1>
-      <Box sx={{ display: "flex", justifyContent: "center", mb: 0, mt: -1 }}>
-        {isLoggedIn && <ChallengeModal />}
-      </Box>
-      <Box sx={{ marginTop: "25px" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: { xs: "var(--margin-mobile)", sm: "var(--margin-desktop)" },
+        marginTop: { sm: "var(--margin-desktop)" },
+      }}
+    >
+      <Typography variant="h4" sx={{ textAlign: "center" }}>
+        Liste des challenges
+      </Typography>
+      {isLoggedIn && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Chip
+            onClick={() => setIsCreateChallengeModalOpen(true)}
+            label="CREER UN CHALLENGE"
+            color="primary"
+          ></Chip>
+          <ChallengeModal
+            open={isCreateChallengeModalOpen}
+            setOpen={setIsCreateChallengeModalOpen}
+          />
+        </Box>
+      )}
+      <>
         {isLoading ? (
           <Box
             sx={{
@@ -97,7 +121,6 @@ export const ChallengesPage = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "25px",
             }}
           >
             <ChallengesList
@@ -109,7 +132,7 @@ export const ChallengesPage = () => {
             />
           </Box>
         )}
-      </Box>
-    </div>
+      </>
+    </Box>
   )
 }
