@@ -10,7 +10,7 @@ import { Link } from "react-router"
 import { formatted } from "../utils/formatedDate"
 
 interface HorizontalCardProps {
-  link_path: string
+  link_path: number
   img: string
   text_chip: string
   title: string

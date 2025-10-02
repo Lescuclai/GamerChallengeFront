@@ -26,7 +26,7 @@ export const VerticalCard = ({
       sx={{
         maxWidth: {
           xs: "300px",
-          md: "300px",
+          md: "200px",
         },
       }}
     >
@@ -57,7 +57,7 @@ export const VerticalCard = ({
             <Chip
               clickable
               component={Link}
-              to={link_path}
+              to={`/challenges/${link_path}`}
               label={text_chip}
               color="primary"
             ></Chip>

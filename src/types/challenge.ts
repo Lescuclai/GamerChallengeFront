@@ -3,6 +3,7 @@ import type { Game } from "./games"
 
 export interface Challenge {
   id: number
+  challenge_id: number
   title: string
   description: string
   created_at: string

@@ -25,7 +25,7 @@ export const ChallengeEdit = ({ challenge }: ChallengeEditModalProp) => {
 
   const { mutate: updateChallenge, isPending } = useMutation({
     mutationFn: (data: ChallengeInfos) =>
-      ChallengeService.update(challenge.id, data),
+      ChallengeService.update(challenge.challenge_id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["challengeDetails"],

@@ -13,6 +13,10 @@ interface DeleteChallengeProp {
 export const ChallengeDelete = ({ challenge_id }: DeleteChallengeProp) => {
   const [open, setOpen] = useState(false)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  )
+  const [snackbarMessage, setSnackbarMessage] = useState("")
   const navigate = useNavigate()
 
   const { mutate: deleteChallenge } = useMutation({
@@ -23,11 +27,16 @@ export const ChallengeDelete = ({ challenge_id }: DeleteChallengeProp) => {
         queryKey: ["challengeDetails", challenge_id],
       })
       queryClient.removeQueries({ queryKey: ["challengesList"] })
+      setSnackbarSeverity("success")
+      setSnackbarMessage("Challenge supprimé avec succès !")
       setSnackbarOpen(true)
       setTimeout(() => navigate("/challenges"), 500)
     },
     onError: (error) => {
       console.error("Erreur lors de la suppression:", error)
+      setSnackbarSeverity("error")
+      setSnackbarMessage("Erreur lors de la suppression !")
+      setSnackbarOpen(true)
     },
   })
   const handleOpen = () => setOpen(true)
@@ -45,7 +54,7 @@ export const ChallengeDelete = ({ challenge_id }: DeleteChallengeProp) => {
           color: "var(--danger-red)",
           borderColor: "var(--danger-red)",
           "&:hover": {
-            backgroundColor: "var(--danger-red)",
+            backgroundColor: "var(--danger-red) !important",
             color: "var(--lavander)",
             cursor: "pointer",
           },
@@ -72,10 +81,10 @@ export const ChallengeDelete = ({ challenge_id }: DeleteChallengeProp) => {
       >
         <Alert
           onClose={() => setSnackbarOpen(false)}
-          severity="success"
+          severity={snackbarSeverity}
           sx={{ width: "100%" }}
         >
-          Challenge supprimé avec succès !
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </>

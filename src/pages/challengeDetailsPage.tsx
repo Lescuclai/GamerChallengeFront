@@ -23,7 +23,7 @@ import { ChallengeDelete } from "../components/ChallengeDelete"
 import { ChallengeEdit } from "../components/ChallengeEdit"
 
 interface HorizontalCardProps {
-  img: string
+  img?: string
 }
 export const ChallengeDetailsPage = ({
   img = "https:images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
@@ -61,8 +61,12 @@ export const ChallengeDetailsPage = ({
     created_at,
     user,
     userHasVoted,
-    id,
+    challenge_id,
   } = challengeData || {}
+  const formattedDate = created_at && formatted(created_at).toString()
+  const entriesAreLoading = results[1]?.isLoading
+  const entries = results[1]?.data?.entries || []
+  const memberEntries = results[1]?.data?.memberEntries || []
   useEffect(() => {
     if (challengeData) {
       setLiked(userHasVoted ?? false)
@@ -163,10 +167,9 @@ export const ChallengeDetailsPage = ({
                   }}
                 >
                   <ChallengeEdit challenge={challengeData!} />
-                  <ChallengeDelete challenge_id={id!} />
+                  <ChallengeDelete challenge_id={challenge_id!} />
                 </Box>
               )}
-
               <Box sx={{ display: "flex", justifyContent: "end" }}>
                 {isLogIn && (
                   <IconButton onClick={handleVoteToggle} aria-label="like">

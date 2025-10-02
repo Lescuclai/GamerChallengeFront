@@ -7,6 +7,7 @@ import type {
   User,
   RegisterInfos,
 } from "../types/auth"
+import { queryClient } from "../main"
 
 class AuthService extends BaseService<User> {
   constructor() {
@@ -17,11 +18,13 @@ class AuthService extends BaseService<User> {
     const res = await handleAxiosError(() =>
       axiosClient.post<UserResponse>(`${this.endpoint}/login`, credentials)
     )
+    queryClient.invalidateQueries({ queryKey: ["challengesList"] })
     return res.data
   }
 
   async logout(): Promise<void> {
     await handleAxiosError(() => axiosClient.post(`${this.endpoint}/logout`))
+    queryClient.invalidateQueries({ queryKey: ["challengesList"] })
   }
 
   async register(registerInfos: RegisterInfos): Promise<UserResponse> {

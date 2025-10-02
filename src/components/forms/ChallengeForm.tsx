@@ -15,8 +15,6 @@ export const ChallengeForm = ({ form, challenge }: ChallengeFormProps) => {
     register,
     control,
     watch,
-    setValue,
-    trigger,
     formState: { errors },
     reset,
   } = form
@@ -50,17 +48,10 @@ export const ChallengeForm = ({ form, challenge }: ChallengeFormProps) => {
           errors.title?.message ||
           `${watch("title")?.length || 0}/100 caractères`
         }
-        sx={{
-          marginBottom: 2,
-        }}
+        sx={{ marginBottom: 2 }}
         multiline
         rows={1}
         variant="outlined"
-        value={watch("title") || ""}
-        onChange={(e) => {
-          setValue("title", e.target.value)
-          trigger("title")
-        }}
       />
       <TextField
         label="Description"
@@ -72,17 +63,10 @@ export const ChallengeForm = ({ form, challenge }: ChallengeFormProps) => {
           maxLength: { value: 200, message: "Maximum 200 caractères" },
           minLength: { value: 10, message: "Minimum 10 caractères" },
         })}
-        sx={{
-          marginBottom: 2,
-        }}
-        name="description"
+        sx={{ marginBottom: 2 }}
         multiline
         rows={1}
         variant="outlined"
-        onChange={(e) => {
-          setValue("description", e.target.value)
-          trigger("description")
-        }}
         error={!!errors.description}
         helperText={
           errors.description?.message ||
@@ -102,11 +86,6 @@ export const ChallengeForm = ({ form, challenge }: ChallengeFormProps) => {
         multiline
         rows={1}
         variant="outlined"
-        value={watch("rules") || ""}
-        onChange={(e) => {
-          setValue("rules", e.target.value)
-          trigger("rules")
-        }}
         error={!!errors.rules}
         helperText={
           errors.rules?.message ||
