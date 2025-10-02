@@ -1,13 +1,16 @@
-import { useForm } from "react-hook-form"
-import { CustomModal } from "./CustomModal"
 import { Alert, Box, Snackbar, TextField } from "@mui/material"
 import { useState } from "react"
-import EntryService from "../services/EntryService"
+import { useForm } from "react-hook-form"
 import { useParams } from "react-router"
+import EntryService from "../services/EntryService"
+import { useAuthStore } from "../stores/authStore"
+import { CustomModal } from "./CustomModal"
 
-interface UseFormInputs {
+export interface UseFormInputs {
   title: string
   video_url: string
+  user_id?: number
+  challenge_id?: number
 }
 export const CreateEntryModal = ({
   open,
@@ -16,6 +19,7 @@ export const CreateEntryModal = ({
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
+  const currentUser = useAuthStore((state) => state.user)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const { challengeId } = useParams()
   const {
@@ -25,8 +29,17 @@ export const CreateEntryModal = ({
     formState: { errors },
   } = useForm<UseFormInputs>()
   const onSubmit = async (data: UseFormInputs) => {
+    const payload = {
+      ...data,
+      challenge_id: Number(challengeId),
+      user_id: currentUser?.id,
+    }
+
     try {
-      const response = await EntryService.createEntry(Number(challengeId), data)
+      const response = await EntryService.createEntry(
+        Number(challengeId),
+        payload
+      )
       if (!response) throw new Error("Erreur lors de l'envoi")
       setSnackbarOpen(true)
       handleClose()

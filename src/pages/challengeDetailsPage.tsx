@@ -1,26 +1,26 @@
-import EntryCard from "../components/EntryCard "
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import FavoriteIcon from "@mui/icons-material/Favorite"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router"
-import { useQueries, useMutation } from "@tanstack/react-query"
-import EntryService from "../services/EntryService"
-import ChallengeService from "../services/ChallengeService"
-import { formatted } from "../utils/formatedDate"
-import { useAuthStore } from "../stores/authStore"
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import {
   Box,
   Card,
   CardContent,
   CardMedia,
   Chip,
-  Typography,
-  IconButton,
   CircularProgress,
+  IconButton,
+  Typography,
 } from "@mui/material"
-import { CreateEntryModal } from "../components/CreateEntryModal"
+import { useMutation, useQueries } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router"
 import { ChallengeDelete } from "../components/ChallengeDelete"
 import { ChallengeEdit } from "../components/ChallengeEdit"
+import { CreateEntryModal } from "../components/CreateEntryModal"
+import EntryCard from "../components/EntryCard "
+import ChallengeService from "../services/ChallengeService"
+import EntryService from "../services/EntryService"
+import { useAuthStore } from "../stores/authStore"
+import { formatted } from "../utils/formatedDate"
 
 interface HorizontalCardProps {
   img?: string
@@ -77,6 +77,7 @@ export const ChallengeDetailsPage = ({
     const res = await toggleVote.mutateAsync(Number(challengeId))
     setLiked(res.voted)
   }
+
   return (
     <Box
       sx={{
@@ -277,12 +278,20 @@ export const ChallengeDetailsPage = ({
                   }}
                 >
                   {memberEntries.map(
-                    ({ entry_id, title, user, userHasVoted }) => (
+                    ({ entry_id, title, user, video_url, userHasVoted }) => (
                       <EntryCard
                         key={entry_id}
-                        entry_id={entry_id}
+                        entryData={{
+                          title: title,
+                          video_url: video_url,
+                          user_id: currentUser?.id,
+                          challenge_id: Number(challengeId),
+                        }}
                         description={title}
                         pseudo={user.pseudo}
+                        videoUrl={video_url}
+                        image={user.avatar}
+                        entry_id={entry_id}
                         isOwner={true}
                         userHasVoted={userHasVoted ?? false}
                       />
@@ -332,17 +341,26 @@ export const ChallengeDetailsPage = ({
               },
             }}
           >
-            {entries &&
-              entries.map(({ entry_id, title, user, userHasVoted }) => (
+            {entries.map(
+              ({ entry_id, title, user, video_url, userHasVoted }) => (
                 <EntryCard
                   key={entry_id}
-                  entry_id={entry_id}
+                  entryData={{
+                    title: title,
+                    video_url: video_url,
+                    user_id: currentUser?.id,
+                    challenge_id: Number(challengeId),
+                  }}
                   description={title}
                   pseudo={user.pseudo}
+                  videoUrl={video_url}
+                  image={user.avatar}
+                  entry_id={entry_id}
                   isOwner={false}
                   userHasVoted={userHasVoted ?? false}
                 />
-              ))}
+              )
+            )}
           </Box>
         </Box>
       </Box>

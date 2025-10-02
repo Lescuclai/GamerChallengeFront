@@ -2,6 +2,7 @@ import { Box, Button, Modal, Typography } from "@mui/material"
 interface CustomModalProps {
   open: boolean
   onClose: (value: boolean) => void
+  onDelete?: () => void | Promise<void>
   title?: string
   children: React.ReactNode
   validationButtonText?: string
