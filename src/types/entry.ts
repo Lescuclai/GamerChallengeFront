@@ -10,6 +10,9 @@ export interface Entry {
   }
 }
 export interface AuthenticatedUserEntry {
-  memberEntries?: Omit<Entry, "_count">[] | []
-  entries: Omit<Entry, "_count">[] | []
+  memberEntries?: (Omit<Entry, "_count"> & { userHasVoted?: boolean })[]
+  entries: (Omit<Entry, "_count"> & { userHasVoted?: boolean })[]
+}
+export interface EntryVoteResponse {
+  voted: boolean
 }
