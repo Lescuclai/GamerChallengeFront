@@ -17,7 +17,6 @@ export const useFetchCurrentUser = () => {
       }
 
       const user = await AuthService.getCurrentUser()
-      console.log(accessToken)
       return user
     },
     retry: false,

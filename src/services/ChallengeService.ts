@@ -5,6 +5,7 @@ import type {
   PaginationChallenge,
 } from "../types/challenge"
 import { handleAxiosError } from "../utils/handleAxiosError"
+import { refreshTokenIfInvalid } from "../utils/token"
 import axiosClient from "./axiosClient"
 import BaseService from "./BaseService"
 
@@ -43,6 +44,7 @@ class ChallengeService extends BaseService<Challenge> {
   async toggleChallengeVote(
     challengeId: number
   ): Promise<ChallengeVoteResponse> {
+    await refreshTokenIfInvalid()
     const res = await handleAxiosError(() =>
       axiosClient.post<ChallengeVoteResponse>(
         `${this.endpoint}/${challengeId}/vote`
