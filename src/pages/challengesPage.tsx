@@ -59,27 +59,38 @@ export const ChallengesPage = () => {
         marginTop: { sm: "var(--margin-desktop)" },
       }}
     >
-      <Typography variant="h4" sx={{ textAlign: "center" }}>
-        Liste des challenges
-      </Typography>
-      {isLoggedIn && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Chip
-            onClick={() => setIsCreateChallengeModalOpen(true)}
-            label="CREER UN CHALLENGE"
-            color="primary"
-          ></Chip>
-          <ChallengeModal
-            open={isCreateChallengeModalOpen}
-            setOpen={setIsCreateChallengeModalOpen}
-          />
-        </Box>
-      )}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: {
+            xs: "var(--margin-mobile-elements)",
+            sm: "var(--margin-desktop-elements)",
+          },
+        }}
+      >
+        <Typography variant="h4" sx={{ textAlign: "center" }}>
+          Liste des challenges
+        </Typography>
+        {isLoggedIn && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Chip
+              onClick={() => setIsCreateChallengeModalOpen(true)}
+              label="CREER UN CHALLENGE"
+              color="primary"
+            ></Chip>
+            <ChallengeModal
+              open={isCreateChallengeModalOpen}
+              setOpen={setIsCreateChallengeModalOpen}
+            />
+          </Box>
+        )}
+      </Box>
       <>
         {isLoading ? (
           <Box
@@ -96,7 +107,10 @@ export const ChallengesPage = () => {
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: "25px",
+              gap: {
+                xs: "var(--margin-mobile-elements)",
+                sm: "var(--margin-desktop-elements)",
+              },
             }}
           >
             <ChallengesList

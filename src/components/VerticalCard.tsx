@@ -25,8 +25,8 @@ export const VerticalCard = ({
     <Card
       sx={{
         maxWidth: {
-          xs: "300px",
-          md: "200px",
+          xs: "280px",
+          sm: "260px",
         },
       }}
     >
@@ -34,22 +34,16 @@ export const VerticalCard = ({
         <CardMedia component="img" src={image} alt="Card Image" />
         <CardContent
           sx={{
-            backgroundColor: "#333333",
-            color: "#EBEBFF",
+            backgroundColor: "var(--jet)",
+            color: "var(--lavander)",
             minHeight: 250,
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            whiteSpace: {
-              xs: "nowrap",
-              md: "normal",
-            },
             fontSize: {
               xs: "14px",
               md: "16px",
             },
-            overflow: "hidden",
-            textOverflow: "ellipsis",
           }}
         >
           {children}

@@ -45,9 +45,9 @@ export const LandingPage = () => {
           },
         }}
       >
-        <div className="flex flex-col text-center justify-evenly items-center bg-amber- max-w-[1056px] h-[355px] sm:h-[413px]">
+        <div className="flex flex-col text-center justify-evenly items-center bg-amber- max-w-[1056px] h-[250px] sm:h-[400px]">
           <div className="sm:h-[201px]">
-            <p className="text-[36px] sm:text-[48px]">GamerChallenges</p>
+            <h1 className="text-[36px] sm:text-[48px]">GamerChallenges</h1>
             <p className="max-w-[486px] ">
               Une plateforme dédiée aux challenges de jeux vidéo, permettant aux
               utilisateurs de proposer et relever des challenges sur différents
@@ -58,17 +58,8 @@ export const LandingPage = () => {
             component={Link}
             to={"/challenges"}
             clickable
-            sx={{
-              width: {
-                xs: "50%",
-                md: "50%",
-              },
-              fontSize: {
-                xs: "1rem",
-                md: "1.25rem",
-              },
-            }}
-            label="Challenges"
+            sx={{ fontSize: "1rem" }}
+            label="CHALLENGES"
             color="primary"
           />
         </div>
@@ -112,7 +103,7 @@ export const LandingPage = () => {
         <p className="text-[1.25rem] " style={{ marginBottom: "1rem" }}>
           Nouveaux challenges
         </p>
-        <div className=" flex flex-col items-center  gap-[var(--margin-desktop-elements)]   sm:flex-row ">
+        <div className=" flex flex-col items-center justify-between gap-[var(--margin-mobile-elements)] sm:flex-row ">
           {newestChallenges.data?.map(
             ({ challenge_id, game, created_at, user, title }) => (
               <VerticalCard
@@ -121,20 +112,37 @@ export const LandingPage = () => {
                 link_path={`${challenge_id}`}
                 text_chip="Détails"
               >
-                <Box>
-                  <Typography variant="h6" sx={{ color: "var(--lavander)" }}>
+                <Box
+                  sx={{
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2, // Limite de lignes
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2, // Limite de lignes
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
                     {game.title}
                   </Typography>
-                  <Typography>-</Typography>
-                  <Typography>{formatted(created_at)}</Typography>
+                  <Typography variant="body1">
+                    Le {formatted(created_at)}
+                  </Typography>
                 </Box>
-                <Typography>{user.pseudo}</Typography>
+                <Typography variant="body2">Par {user.pseudo}</Typography>
                 <Typography
                   variant="body2"
                   sx={{
-                    fontSize: 14,
                     display: "-webkit-box",
-                    WebkitLineClamp: { xs: 3, md: 3 }, // Limite de lignes
+                    WebkitLineClamp: 2, // Limite de lignes
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
