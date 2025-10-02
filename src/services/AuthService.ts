@@ -46,6 +46,13 @@ class AuthService extends BaseService<User> {
       axiosClient.patch(`${this.endpoint}/delete/${userId}`)
     )
   }
+
+  async getNewAccessToken(): Promise<string | null> {
+    const res = await handleAxiosError(() =>
+      axiosClient.post<{ accessToken: string }>(`${this.endpoint}/refresh`)
+    )
+    return res.data.accessToken || null
+  }
 }
 
 export default new AuthService()
