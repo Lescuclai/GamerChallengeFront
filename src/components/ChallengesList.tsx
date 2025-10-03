@@ -49,21 +49,44 @@ export const ChallengesList = ({
                 title={title}
                 creation_date={created_at}
                 content={description}
-                text_chip="Détails"
+                text_chip="DETAILS"
               />
             ) : (
               <VerticalCard
                 key={challenge_id}
                 image={game.image_url}
-                link_path={"/challenge/" + challenge_id}
-                text_chip="Détails"
+                link_path={`${challenge_id}`}
+                text_chip="DETAILS"
               >
                 <Box>
-                  <Typography variant="h6" sx={{ color: "var(--lavander)" }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2, // Limite de lignes
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
                     {game.title}
                   </Typography>
-                  <Typography>-</Typography>
-                  <Typography>{formatted(created_at)}</Typography>
+                  <Typography variant="caption">
+                    {formatted(created_at)}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      pt: 2,
+                      display: "-webkit-box",
+                      WebkitLineClamp: { xs: 3, md: 5 }, // Limite de lignes
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {description}
+                  </Typography>
                 </Box>
                 <Typography
                   variant="body2"
@@ -121,7 +144,10 @@ export const ChallengesList = ({
           alignSelf: "center",
           display: "flex",
           flexDirection: "column",
-          gap: "var(--margin-desktop-elements)",
+          gap: {
+            xs: "var(--margin-mobile-elements)",
+            sm: "var(--margin-desktop-elements)",
+          },
         }}
       >
         <Typography variant="h5">{titleSection}</Typography>

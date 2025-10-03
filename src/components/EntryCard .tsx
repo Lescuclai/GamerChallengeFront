@@ -45,15 +45,11 @@ export default function EntryCard({
   }
 
   return (
-    <Box>
+    <>
       <Card
         sx={{
           backgroundColor: "var(--jet)",
           color: "var(--lavander)",
-          maxWidth: {
-            xs: "250px",
-            md: "300px",
-          },
           minWidth: {
             xs: "250px",
             md: "200px",
@@ -64,7 +60,8 @@ export default function EntryCard({
           display="flex"
           justifyContent="space-between"
           alignItems="center"
-          margin="16px 16px 0 0"
+          padding="16px"
+          paddingBottom="0px"
         >
           <Avatar
             src={image || avatarDefault}
@@ -74,7 +71,6 @@ export default function EntryCard({
               height: 40,
               padding: 1,
               bgcolor: "var(--tropical-indigo)",
-              m: 1,
             }}
           />
           {isOwner && <Chip clickable label="EDITER" color="primary" />}
@@ -143,6 +139,6 @@ export default function EntryCard({
           </Box>
         </CardContent>
       </Card>
-    </Box>
+    </>
   )
 }

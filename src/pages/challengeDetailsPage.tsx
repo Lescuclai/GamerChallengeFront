@@ -90,7 +90,10 @@ export const ChallengeDetailsPage = ({
         sx={{
           display: "flex",
           flexDirection: "column",
-          gap: "var(--margin-desktop-elements)",
+          gap: {
+            xs: "var(--margin-mobile-elements)",
+            sm: "var(--margin-desktop-elements)",
+          },
         }}
       >
         <Typography variant="h4" sx={{ textAlign: "center" }}>
@@ -189,14 +192,20 @@ export const ChallengeDetailsPage = ({
         sx={{
           display: "flex",
           flexDirection: "column",
-          gap: "var(--margin-desktop-elements)",
+          gap: {
+            xs: "var(--margin-mobile)",
+            sm: "var(--margin-desktop)",
+          },
         }}
       >
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: "var(--margin-desktop-elements)",
+            gap: {
+              xs: "var(--margin-mobile-elements)",
+              sm: "var(--margin-desktop-elements)",
+            },
           }}
         >
           <Typography variant="h4" sx={{ textAlign: "center" }}>
@@ -225,14 +234,23 @@ export const ChallengeDetailsPage = ({
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: "var(--margin-desktop-elements)",
+            gap: {
+              xs: "var(--margin-mobile-elements)",
+              sm: "var(--margin-desktop-elements)",
+            },
           }}
         >
           {isLogIn && (
             <>
               <Typography variant="h5">Mes participations</Typography>
               {entriesAreLoading && (
-                <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    my: 4,
+                  }}
+                >
                   <CircularProgress />
                 </Box>
               )}
@@ -246,7 +264,16 @@ export const ChallengeDetailsPage = ({
                   sx={{
                     display: "flex",
                     justifyContent: "center",
-                    gap: "var(--margin-desktop-elements)",
+                    alignItems: "center",
+                    flexDirection: {
+                      xs: "column",
+                      sm: "row",
+                    },
+                    flexWrap: "wrap",
+                    gap: {
+                      xs: "var(--margin-mobile-elements)",
+                      sm: "var(--margin-desktop-elements)",
+                    },
                   }}
                 >
                   {memberEntries.map(
@@ -270,7 +297,10 @@ export const ChallengeDetailsPage = ({
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: "var(--margin-desktop-elements)",
+            gap: {
+              xs: "var(--margin-mobile-elements)",
+              sm: "var(--margin-desktop-elements)",
+            },
           }}
         >
           {isLogIn && (
@@ -290,8 +320,16 @@ export const ChallengeDetailsPage = ({
             sx={{
               display: "flex",
               justifyContent: "center",
-              gap: "var(--margin-desktop-elements)",
+              alignItems: "center",
+              flexDirection: {
+                xs: "column",
+                sm: "row",
+              },
               flexWrap: "wrap",
+              gap: {
+                xs: "var(--margin-mobile-elements)",
+                sm: "var(--margin-desktop-elements)",
+              },
             }}
           >
             {entries &&

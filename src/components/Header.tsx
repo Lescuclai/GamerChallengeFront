@@ -1,4 +1,11 @@
-import { AppBar, Toolbar, useMediaQuery, Chip, Avatar } from "@mui/material"
+import {
+  AppBar,
+  Toolbar,
+  useMediaQuery,
+  Chip,
+  Avatar,
+  IconButton,
+} from "@mui/material"
 import { useState } from "react"
 import { AuthModal } from "./AuthModal"
 import { useAuthStore } from "../stores/authStore"
@@ -37,26 +44,18 @@ export default function Header() {
           (isLoggedIn ? (
             <AccountMenu />
           ) : isSmallScreen ? (
-            <Chip
-              size="small"
-              color="primary"
-              avatar={<Avatar src={avatar} alt="Avatar" />}
+            <IconButton
               onClick={() => setIsAuthModalOpen(true)}
-              sx={{
-                paddingRight: 0,
-                paddingLeft: 1,
-                height: 32,
-                ".MuiChip-avatar": {
-                  width: 30,
-                  height: 30,
-                  marginLeft: 2,
-                  marginRight: 1,
-                },
-                "&:hover": {
-                  backgroundColor: "var(--custom-slate-blue)",
-                },
-              }}
-            />
+              size="small"
+              sx={{ ml: 2 }}
+            >
+              <Avatar
+                sx={{
+                  ".MuiAvatar-img": { width: "75%", height: "75%", p: "1px" },
+                }}
+                src={avatar}
+              />
+            </IconButton>
           ) : (
             <Chip
               label="CONNEXION"

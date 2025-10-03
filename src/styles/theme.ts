@@ -71,5 +71,21 @@ export const theme = createTheme({
         },
       },
     },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          ".MuiChip-labelMedium": {
+            padding: "1rem",
+          },
+        },
+      },
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.primary.main,
+        }),
+      },
+    },
   },
 })
