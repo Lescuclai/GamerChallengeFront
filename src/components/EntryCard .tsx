@@ -1,20 +1,27 @@
+import DeleteIcon from "@mui/icons-material/Delete"
+import EditIcon from "@mui/icons-material/Edit"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import {
+  Alert,
   Avatar,
   Box,
   Card,
   CardContent,
   Chip,
   IconButton,
+  Modal,
+  Snackbar,
   Typography,
 } from "@mui/material"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import ReactPlayer from "react-player"
 import avatarDefault from "../assets/avatar.svg"
-import { useAuthStore } from "../stores/authStore"
-import { useMutation } from "@tanstack/react-query"
+import { UpdateEntryModal } from "../components/forms/EntryForm"
 import EntryService from "../services/EntryService"
+import { useAuthStore } from "../stores/authStore"
+import type { UseFormInputs } from "./CreateEntryModal"
 interface EntryCardProps {
   entry_id: number
   image?: string
@@ -23,9 +30,12 @@ interface EntryCardProps {
   videoUrl?: string
   isOwner: boolean
   userHasVoted: boolean
+  entryData: UseFormInputs
 }
+
 export default function EntryCard({
   entry_id,
+  entryData,
   image,
   pseudo,
   description,
@@ -44,24 +54,65 @@ export default function EntryCard({
     setLiked(res.voted)
   }
 
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState("")
+  const [isEntryModalOpen, setIsEntryModalOpen] = useState(false)
+  const queryClient = useQueryClient()
+  const challengeId = entryData.challenge_id
+  const currentUser = useAuthStore((state) => state.user)
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+
+  const deleteEntryMutation = useMutation({
+    mutationFn: (entryId: number) => EntryService.deleteEntry(entryId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["challengeEntries", challengeId, currentUser?.id],
+        exact: true,
+      })
+      await queryClient.refetchQueries({ type: "active" })
+    },
+  })
+
+  const handleDelete = async () => {
+    try {
+      await deleteEntryMutation.mutateAsync(entry_id)
+      setSnackbarMessage("Participation supprimée avec succès !")
+      setSnackbarOpen(true)
+      handleClose()
+    } catch (error) {
+      console.error(error)
+      setSnackbarMessage("Erreur lors de la suppression")
+      setSnackbarOpen(true)
+    }
+  }
+
   return (
     <>
       <Card
         sx={{
           backgroundColor: "var(--jet)",
           color: "var(--lavander)",
+
+          maxWidth: {
+            xs: "280px",
+            md: "450px",
+          },
+
           minWidth: {
-            xs: "250px",
-            md: "200px",
+            xs: "280px",
+            md: "300px",
           },
         }}
       >
         <Box
           display="flex"
-          justifyContent="space-between"
+          gap={1}
           alignItems="center"
-          padding="16px"
-          paddingBottom="0px"
+          justifyContent="space-between"
+          margin="16px 16px 0 10px"
         >
           <Avatar
             src={image || avatarDefault}
@@ -69,12 +120,29 @@ export default function EntryCard({
             sx={{
               width: 40,
               height: 40,
-              padding: 1,
               bgcolor: "var(--tropical-indigo)",
+              objectFit: "cover",
+              objectPosition: "center",
             }}
           />
+
           {isOwner && <Chip clickable label="EDITER" color="primary" />}
+
+          {isLoggedIn && (
+            <Box>
+              <IconButton
+                aria-label="modifier"
+                onClick={() => setIsEntryModalOpen(true)}
+              >
+                <EditIcon sx={{ color: "var(--lavander)" }} />
+              </IconButton>
+              <IconButton aria-label="supprimer" onClick={handleDelete}>
+                <DeleteIcon sx={{ color: "red" }} />
+              </IconButton>
+            </Box>
+          )}
         </Box>
+
         <CardContent>
           <Box
             display="flex"
@@ -99,22 +167,59 @@ export default function EntryCard({
           >
             {description || "Description courte de la vidéo"}
           </Typography>
-          <Box>
+          <Box
+            sx={{
+              position: "relative",
+              width: "100%",
+              aspectRatio: "16 / 9",
+              overflow: "hidden",
+              cursor: "pointer",
+            }}
+            onClick={handleOpen}
+          >
+            <ReactPlayer
+              src={videoUrl || "https://muxed.s3.amazonaws.com/leds.mp4"}
+              width="100%"
+              height="100%"
+              controls
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                pointerEvents: "none",
+              }}
+            />
+          </Box>
+          <Modal open={open} onClose={handleClose}>
             <Box
               sx={{
-                position: "relative",
-                paddingTop: "58.25%",
-                width: "100%",
-                cursor: "pointer",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: { xs: "100vw", md: "90vw" },
+                maxHeight: { xs: "100vh", md: "100vh" },
+                bgcolor: "transparent",
+                outline: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                p: 0,
               }}
             >
               <Box
                 sx={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
                   width: "100%",
-                  height: "100%",
+                  height: { xs: "60vh", md: "90vh" },
+                  maxWidth: "1800px",
+                  maxHeight: "100vh",
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                  boxShadow: 8,
+                  bgcolor: "black",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 <ReactPlayer
@@ -122,10 +227,14 @@ export default function EntryCard({
                   width="100%"
                   height="100%"
                   controls
+                  playing
+                  style={{
+                    backgroundColor: "black",
+                  }}
                 />
               </Box>
             </Box>
-          </Box>
+          </Modal>
           <Box display="flex" justifyContent="flex-end" mt={0} mb={-2}>
             {isLogIn && (
               <IconButton onClick={handleVoteToggle} aria-label="like">
@@ -137,8 +246,36 @@ export default function EntryCard({
               </IconButton>
             )}
           </Box>
+          <UpdateEntryModal
+            open={isEntryModalOpen}
+            setOpen={setIsEntryModalOpen}
+            entryId={entry_id}
+            entryData={{
+              title: entryData.title,
+              video_url: entryData.video_url,
+              user_id: entryData.user_id,
+              challenge_id: entryData.challenge_id,
+            }}
+          />
         </CardContent>
       </Card>
+
+      <Box>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={() => setSnackbarOpen(false)}
+            severity={snackbarMessage.includes("Erreur") ? "error" : "success"}
+            sx={{ width: "100%" }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </Box>
     </>
   )
 }

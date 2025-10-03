@@ -1,14 +1,20 @@
-import { useForm } from "react-hook-form"
-import { CustomModal } from "./CustomModal"
 import { Alert, Box, Snackbar, TextField } from "@mui/material"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import EntryService from "../services/EntryService"
+import { useForm } from "react-hook-form"
 import { useParams } from "react-router"
+import EntryService from "../services/EntryService"
+import { useAuthStore } from "../stores/authStore"
+import { CustomModal } from "./CustomModal"
 
-interface UseFormInputs {
+export interface UseFormInputs {
   title: string
   video_url: string
+  user_id?: number
+  challenge_id?: number
+  entry_id?: number
 }
+
 export const CreateEntryModal = ({
   open,
   setOpen,
@@ -16,24 +22,45 @@ export const CreateEntryModal = ({
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
+  const currentUser = useAuthStore((state) => state.user)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const { challengeId } = useParams()
+  const queryClient = useQueryClient()
+
+  const createEntryMutation = useMutation({
+    mutationFn: (data: UseFormInputs) =>
+      EntryService.createEntry(Number(challengeId), data),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["challengeEntries", challengeId, currentUser?.id],
+        exact: true,
+      })
+      await queryClient.refetchQueries({ type: "active" })
+
+      setSnackbarOpen(true)
+      handleClose()
+    },
+    onError: (error) => {
+      console.error("Erreur lors de la création :", error)
+    },
+  })
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<UseFormInputs>()
+
   const onSubmit = async (data: UseFormInputs) => {
-    try {
-      const response = await EntryService.createEntry(Number(challengeId), data)
-      if (!response) throw new Error("Erreur lors de l'envoi")
-      setSnackbarOpen(true)
-      handleClose()
-    } catch (error) {
-      console.log(error)
+    const payload = {
+      ...data,
+      challenge_id: Number(challengeId),
+      user_id: currentUser?.id,
     }
+    createEntryMutation.mutate(payload)
   }
+
   const handleClose = () => {
     reset()
     setOpen(false)

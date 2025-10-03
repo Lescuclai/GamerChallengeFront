@@ -5,6 +5,8 @@ export interface Entry {
   title: string
   video_url: string
   user: User
+  user_id: number
+  challenge_id: number
   _count: {
     entryVoters: number
   }
