@@ -1,7 +1,9 @@
 import { Alert, Box, Snackbar, TextField } from "@mui/material"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import EntryService from "../../services/EntryService"
+import { useAuthStore } from "../../stores/authStore"
 import type { UseFormInputs } from "../CreateEntryModal"
 import { CustomModal } from "../CustomModal"
 
@@ -17,7 +19,6 @@ export const UpdateEntryModal = ({
   entryData: UseFormInputs
 }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false)
-
   const {
     register,
     handleSubmit,
@@ -26,17 +27,35 @@ export const UpdateEntryModal = ({
   } = useForm<UseFormInputs>({
     defaultValues: entryData,
   })
-
   useEffect(() => {
     reset(entryData)
   }, [entryData, reset])
-
+  const queryClient = useQueryClient()
+  const challengeId = entryData.challenge_id
+  const currentUser = useAuthStore((state) => state.user)
+  const updateEntryMutation = useMutation({
+    mutationFn: ({ entryId, data }: { entryId: number; data: UseFormInputs }) =>
+      EntryService.updateEntry(entryId, data),
+    onSuccess: async () => {
+      console.log("Mutation réussie, refetch entries…")
+      await queryClient.invalidateQueries({
+        queryKey: ["challengeEntries", challengeId, currentUser?.id],
+        exact: true,
+      })
+      await queryClient.refetchQueries({ type: "active" })
+      setSnackbarOpen(true)
+      handleClose()
+    },
+  })
   const onSubmit = async (data: UseFormInputs) => {
     try {
-      await EntryService.updateEntry(entryId, {
-        ...data,
-        challenge_id: entryData.challenge_id,
-        user_id: entryData.user_id,
+      await updateEntryMutation.mutateAsync({
+        entryId,
+        data: {
+          ...data,
+          challenge_id: entryData.challenge_id,
+          user_id: entryData.user_id,
+        },
       })
       setSnackbarOpen(true)
       handleClose()
@@ -44,12 +63,10 @@ export const UpdateEntryModal = ({
       console.error(error)
     }
   }
-
   const handleClose = () => {
     reset()
     setOpen(false)
   }
-
   return (
     <>
       <CustomModal

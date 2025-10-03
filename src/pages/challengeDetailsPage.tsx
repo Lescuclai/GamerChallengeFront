@@ -47,6 +47,7 @@ export const ChallengeDetailsPage = ({
       },
     ],
   })
+
   const toggleVote = useMutation({
     mutationFn: (challengeId: number) =>
       ChallengeService.toggleChallengeVote(challengeId),
@@ -77,6 +78,14 @@ export const ChallengeDetailsPage = ({
     const res = await toggleVote.mutateAsync(Number(challengeId))
     setLiked(res.voted)
   }
+
+  const [version, setVersion] = useState(0)
+
+  useEffect(() => {
+    if (!entriesAreLoading) {
+      setVersion((v) => v + 1)
+    }
+  }, [entries])
 
   return (
     <Box

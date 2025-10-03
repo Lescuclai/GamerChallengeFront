@@ -34,7 +34,6 @@ export const CreateEntryModal = ({
       challenge_id: Number(challengeId),
       user_id: currentUser?.id,
     }
-
     try {
       const response = await EntryService.createEntry(
         Number(challengeId),
@@ -51,7 +50,6 @@ export const CreateEntryModal = ({
     reset()
     setOpen(false)
   }
-
   return (
     <>
       <CustomModal

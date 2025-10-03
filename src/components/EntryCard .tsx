@@ -14,11 +14,10 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import ReactPlayer from "react-player"
 import avatarDefault from "../assets/avatar.svg"
-
-import { useMutation } from "@tanstack/react-query"
 import { UpdateEntryModal } from "../components/forms/EntryForm"
 import EntryService from "../services/EntryService"
 import { useAuthStore } from "../stores/authStore"
@@ -65,20 +64,44 @@ export default function EntryCard({
   const handleClose = () => setOpen(false)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState("")
-  //Entry-Modal
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false)
-  const handleDelete = async () => {
+  const queryClient = useQueryClient()
+  const challengeId = entryData.challenge_id
+  const currentUser = useAuthStore((state) => state.user)
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const deleteEntryMutation = useMutation({
+    mutationFn: ({ entryId }: { entryId: number; data: UseFormInputs }) =>
+      EntryService.deleteEntry(entryId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["challengeEntries", challengeId, currentUser?.id],
+        exact: true,
+      })
+      await queryClient.refetchQueries({ type: "active" })
+    },
+  })
+  const handleDelete = async (data: UseFormInputs) => {
     try {
       await EntryService.deleteEntry(entry_id)
+
+      await deleteEntryMutation.mutateAsync({
+        entryId,
+        data: {
+          ...data,
+          challenge_id: entryData.challenge_id,
+          user_id: entryData.user_id,
+        },
+      })
+
       setSnackbarMessage("Participation supprimée avec succès !")
       setSnackbarOpen(true)
+      handleClose()
     } catch (error) {
       console.error(error)
       setSnackbarMessage("Erreur lors de la suppression")
       setSnackbarOpen(true)
     }
   }
-
   return (
     <>
       <Card
@@ -92,7 +115,7 @@ export default function EntryCard({
           },
 
           minWidth: {
-            xs: "250px",
+            xs: "280px",
             md: "300px",
           },
         }}
@@ -115,6 +138,7 @@ export default function EntryCard({
               objectPosition: "center",
             }}
           />
+
           {isOwner && <Chip clickable label="EDITER" color="primary" />}
 
           <Box>
@@ -124,10 +148,30 @@ export default function EntryCard({
             >
               <EditIcon sx={{ color: "var(--lavander)" }} />
             </IconButton>
-            <IconButton aria-label="supprimer" onClick={handleDelete}>
+            <IconButton
+              aria-label="supprimer"
+              onClick={() => handleDelete(entryData)}
+            >
               <DeleteIcon sx={{ color: "red" }} />
             </IconButton>
           </Box>
+
+          {isLoggedIn && (
+            <Box>
+              <IconButton
+                aria-label="modifier"
+                onClick={() => setIsEntryModalOpen(true)}
+              >
+                <EditIcon sx={{ color: "var(--lavander)" }} />
+              </IconButton>
+              <IconButton
+                aria-label="supprimer"
+                onClick={() => handleDelete(entryData)}
+              >
+                <DeleteIcon sx={{ color: "red" }} />
+              </IconButton>
+            </Box>
+          )}
         </Box>
 
         <CardContent>
@@ -173,11 +217,10 @@ export default function EntryCard({
                 position: "absolute",
                 top: 0,
                 left: 0,
-                pointerEvents: "none", // permet de cliquer à travers le player sur mobile/démo
+                pointerEvents: "none",
               }}
             />
           </Box>
-
           <Modal open={open} onClose={handleClose}>
             <Box
               sx={{
@@ -223,7 +266,6 @@ export default function EntryCard({
               </Box>
             </Box>
           </Modal>
-
           <Box display="flex" justifyContent="flex-end" mt={0} mb={-2}>
             {isLogIn && (
               <IconButton onClick={handleVoteToggle} aria-label="like">
