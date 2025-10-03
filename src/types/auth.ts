@@ -9,6 +9,7 @@ export interface User {
 export interface UserResponse {
   message?: string
   user: User
+  accessToken?: string
 }
 
 export interface LoginInfos {
@@ -29,8 +30,10 @@ export interface AuthState {
   isLoggedIn: boolean
   isAdmin: boolean
   isLoading: boolean
+  accessToken: string | null
   setUser: (user: User | null) => void
   logout: () => void
+  setAccessToken: (token: string | null) => void
 }
 
 export type AuthModalProps = {

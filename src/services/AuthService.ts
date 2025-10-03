@@ -1,6 +1,7 @@
 import BaseService from "./BaseService"
 import axiosClient from "./axiosClient"
 import { handleAxiosError } from "../utils/handleAxiosError"
+import { refreshTokenIfInvalid } from "../utils/token"
 import type {
   LoginInfos,
   UserResponse,
@@ -35,6 +36,7 @@ class AuthService extends BaseService<User> {
   }
 
   async getCurrentUser(): Promise<User> {
+    await refreshTokenIfInvalid()
     const res = await handleAxiosError(() =>
       axiosClient.get<UserResponse>(`${this.endpoint}/me`)
     )
@@ -42,9 +44,17 @@ class AuthService extends BaseService<User> {
   }
 
   async softDeleteUser(userId: number): Promise<void> {
+    await refreshTokenIfInvalid()
     await handleAxiosError(() =>
       axiosClient.patch(`${this.endpoint}/delete/${userId}`)
     )
+  }
+
+  async getNewAccessToken(): Promise<string | null> {
+    const res = await handleAxiosError(() =>
+      axiosClient.post<{ accessToken: string }>(`${this.endpoint}/refresh`)
+    )
+    return res.data.accessToken || null
   }
 }
 

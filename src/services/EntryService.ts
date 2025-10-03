@@ -4,6 +4,7 @@ import type {
   EntryVoteResponse,
 } from "../types/entry"
 import { handleAxiosError } from "../utils/handleAxiosError"
+import { refreshTokenIfInvalid } from "../utils/token"
 import axiosClient from "./axiosClient"
 import BaseService from "./BaseService"
 
@@ -29,12 +30,14 @@ class EntryService extends BaseService<Entry> {
     challengeId: number,
     payload: Partial<Entry>
   ): Promise<Entry> {
+    await refreshTokenIfInvalid()
     const res = await handleAxiosError(() =>
       axiosClient.post<Entry>(`${this.endpoint}/${challengeId}`, payload)
     )
     return res.data
   }
   async toggleEntryVote(entryId: number): Promise<EntryVoteResponse> {
+    await refreshTokenIfInvalid()
     const res = await handleAxiosError(() =>
       axiosClient.post<EntryVoteResponse>(`${this.endpoint}/${entryId}/vote`)
     )
