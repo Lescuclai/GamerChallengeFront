@@ -56,6 +56,18 @@ class AuthService extends BaseService<User> {
     )
     return res.data.accessToken || null
   }
+
+  async forgotPassword(payload: {
+    email: string
+  }): Promise<{ message: string }> {
+    const res = await handleAxiosError(() =>
+      axiosClient.post<{ message: string }>(
+        `${this.endpoint}/forgot-password`,
+        payload
+      )
+    )
+    return res.data
+  }
 }
 
 export default new AuthService()

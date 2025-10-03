@@ -17,6 +17,10 @@ export interface LoginInfos {
   password: string
 }
 
+export interface ForgotPasswordInfos {
+  email: string
+}
+
 export interface RegisterInfos {
   pseudo: string
   email: string
@@ -48,4 +52,4 @@ export type RegisterError = {
   }
 }
 
-export type FormType = "login" | "register"
+export type FormType = "login" | "register" | "forgotPassword"
