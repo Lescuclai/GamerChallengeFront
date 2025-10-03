@@ -3,11 +3,15 @@ import { useForm } from "react-hook-form"
 import { useAuth } from "../hooks/useAuth"
 import { useSearchParams } from "react-router-dom"
 import type { ResetPasswordInfos } from "../types/auth"
+import { useState } from "react"
 
 export const ReinitPasswordPage = () => {
   const [searchParams] = useSearchParams()
   const token = searchParams.get("token") || ""
   const { resetPassword } = useAuth()
+  const [resetPasswordSuccess, setResetPasswordSuccess] = useState<
+    string | null
+  >(null)
   const reinitPasswordForm = useForm<ResetPasswordInfos>()
   const {
     register,
@@ -19,8 +23,8 @@ export const ReinitPasswordPage = () => {
   const password = watch("password")
 
   const onSubmit = async (data: ResetPasswordInfos) => {
-    console.log(data)
-    await resetPassword(data)
+    const res = await resetPassword(data)
+    setResetPasswordSuccess(res.message)
   }
 
   return (
@@ -90,6 +94,9 @@ export const ReinitPasswordPage = () => {
             error={!!errors.confirm}
             helperText={errors.confirm?.message}
           />
+          {resetPasswordSuccess && (
+            <p className="text-green-600">{resetPasswordSuccess}</p>
+          )}
           <Button
             sx={{ mt: 2, width: "50%", mx: "auto" }}
             color="primary"
