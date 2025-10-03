@@ -21,6 +21,12 @@ export interface ForgotPasswordInfos {
   email: string
 }
 
+export interface ResetPasswordInfos {
+  password: string
+  confirm: string
+  token: string
+}
+
 export interface RegisterInfos {
   pseudo: string
   email: string

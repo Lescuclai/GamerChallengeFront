@@ -7,6 +7,7 @@ import type {
   UserResponse,
   User,
   RegisterInfos,
+  ResetPasswordInfos,
 } from "../types/auth"
 import { queryClient } from "../main"
 
@@ -63,6 +64,18 @@ class AuthService extends BaseService<User> {
     const res = await handleAxiosError(() =>
       axiosClient.post<{ message: string }>(
         `${this.endpoint}/forgot-password`,
+        payload
+      )
+    )
+    return res.data
+  }
+
+  async resetPassword(
+    payload: ResetPasswordInfos
+  ): Promise<{ message: string }> {
+    const res = await handleAxiosError(() =>
+      axiosClient.post<{ message: string }>(
+        `${this.endpoint}/reset-password`,
         payload
       )
     )
