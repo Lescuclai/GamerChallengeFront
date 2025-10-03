@@ -37,7 +37,6 @@ export const UpdateEntryModal = ({
     mutationFn: ({ entryId, data }: { entryId: number; data: UseFormInputs }) =>
       EntryService.updateEntry(entryId, data),
     onSuccess: async () => {
-      console.log("Mutation réussie, refetch entries…")
       await queryClient.invalidateQueries({
         queryKey: ["challengeEntries", challengeId, currentUser?.id],
         exact: true,

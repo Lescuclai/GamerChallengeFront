@@ -79,13 +79,13 @@ export const ChallengeDetailsPage = ({
     setLiked(res.voted)
   }
 
-  const [version, setVersion] = useState(0)
+  // const [version, setVersion] = useState(0)
 
-  useEffect(() => {
-    if (!entriesAreLoading) {
-      setVersion((v) => v + 1)
-    }
-  }, [entries])
+  // useEffect(() => {
+  //   if (!entriesAreLoading) {
+  //     setVersion((v) => v + 1)
+  //   }
+  // }, [entries])
 
   return (
     <Box

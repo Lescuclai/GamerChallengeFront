@@ -21,7 +21,6 @@ import avatarDefault from "../assets/avatar.svg"
 import { UpdateEntryModal } from "../components/forms/EntryForm"
 import EntryService from "../services/EntryService"
 import { useAuthStore } from "../stores/authStore"
-
 import type { UseFormInputs } from "./CreateEntryModal"
 interface EntryCardProps {
   entry_id: number
@@ -55,10 +54,6 @@ export default function EntryCard({
     setLiked(res.voted)
   }
 
-  // const [liked, setLiked] = useState(false)
-  // const toggleLike = () => {
-  //   setLiked((prev) => !prev)
-  // }
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -69,9 +64,9 @@ export default function EntryCard({
   const challengeId = entryData.challenge_id
   const currentUser = useAuthStore((state) => state.user)
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+
   const deleteEntryMutation = useMutation({
-    mutationFn: ({ entryId }: { entryId: number; data: UseFormInputs }) =>
-      EntryService.deleteEntry(entryId),
+    mutationFn: (entryId: number) => EntryService.deleteEntry(entryId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["challengeEntries", challengeId, currentUser?.id],
@@ -80,19 +75,10 @@ export default function EntryCard({
       await queryClient.refetchQueries({ type: "active" })
     },
   })
-  const handleDelete = async (data: UseFormInputs) => {
+
+  const handleDelete = async () => {
     try {
-      await EntryService.deleteEntry(entry_id)
-
-      await deleteEntryMutation.mutateAsync({
-        entryId,
-        data: {
-          ...data,
-          challenge_id: entryData.challenge_id,
-          user_id: entryData.user_id,
-        },
-      })
-
+      await deleteEntryMutation.mutateAsync(entry_id)
       setSnackbarMessage("Participation supprimée avec succès !")
       setSnackbarOpen(true)
       handleClose()
@@ -102,6 +88,7 @@ export default function EntryCard({
       setSnackbarOpen(true)
     }
   }
+
   return (
     <>
       <Card
@@ -141,21 +128,6 @@ export default function EntryCard({
 
           {isOwner && <Chip clickable label="EDITER" color="primary" />}
 
-          <Box>
-            <IconButton
-              aria-label="modifier"
-              onClick={() => setIsEntryModalOpen(true)}
-            >
-              <EditIcon sx={{ color: "var(--lavander)" }} />
-            </IconButton>
-            <IconButton
-              aria-label="supprimer"
-              onClick={() => handleDelete(entryData)}
-            >
-              <DeleteIcon sx={{ color: "red" }} />
-            </IconButton>
-          </Box>
-
           {isLoggedIn && (
             <Box>
               <IconButton
@@ -164,10 +136,7 @@ export default function EntryCard({
               >
                 <EditIcon sx={{ color: "var(--lavander)" }} />
               </IconButton>
-              <IconButton
-                aria-label="supprimer"
-                onClick={() => handleDelete(entryData)}
-              >
+              <IconButton aria-label="supprimer" onClick={handleDelete}>
                 <DeleteIcon sx={{ color: "red" }} />
               </IconButton>
             </Box>

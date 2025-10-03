@@ -11,6 +11,7 @@ export interface UseFormInputs {
   video_url: string
   user_id?: number
   challenge_id?: number
+  entry_id?: number
 }
 export const CreateEntryModal = ({
   open,
