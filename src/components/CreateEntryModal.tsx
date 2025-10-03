@@ -1,4 +1,5 @@
 import { Alert, Box, Snackbar, TextField } from "@mui/material"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useParams } from "react-router"
@@ -13,6 +14,7 @@ export interface UseFormInputs {
   challenge_id?: number
   entry_id?: number
 }
+
 export const CreateEntryModal = ({
   open,
   setOpen,
@@ -23,34 +25,47 @@ export const CreateEntryModal = ({
   const currentUser = useAuthStore((state) => state.user)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const { challengeId } = useParams()
+  const queryClient = useQueryClient()
+
+  const createEntryMutation = useMutation({
+    mutationFn: (data: UseFormInputs) =>
+      EntryService.createEntry(Number(challengeId), data),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["challengeEntries", challengeId, currentUser?.id],
+        exact: true,
+      })
+      await queryClient.refetchQueries({ type: "active" })
+
+      setSnackbarOpen(true)
+      handleClose()
+    },
+    onError: (error) => {
+      console.error("Erreur lors de la création :", error)
+    },
+  })
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<UseFormInputs>()
+
   const onSubmit = async (data: UseFormInputs) => {
     const payload = {
       ...data,
       challenge_id: Number(challengeId),
       user_id: currentUser?.id,
     }
-    try {
-      const response = await EntryService.createEntry(
-        Number(challengeId),
-        payload
-      )
-      if (!response) throw new Error("Erreur lors de l'envoi")
-      setSnackbarOpen(true)
-      handleClose()
-    } catch (error) {
-      console.log(error)
-    }
+    createEntryMutation.mutate(payload)
   }
+
   const handleClose = () => {
     reset()
     setOpen(false)
   }
+
   return (
     <>
       <CustomModal

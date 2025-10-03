@@ -97,7 +97,7 @@ export default function EntryCard({
           color: "var(--lavander)",
 
           maxWidth: {
-            xs: "250px",
+            xs: "280px",
             md: "450px",
           },
 
