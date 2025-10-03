@@ -38,6 +38,7 @@ class ChallengeService extends BaseService<Challenge> {
     return res.data
   }
   async deleteChallenge(challenge_id: number): Promise<void> {
+    await refreshTokenIfInvalid()
     const res = await this.delete(challenge_id)
     return res
   }
