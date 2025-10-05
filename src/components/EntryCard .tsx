@@ -174,7 +174,7 @@ export default function EntryCard({
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: { xs: "100vw", md: "90vw" },
+                width: { xs: "90vw", md: "80vw" },
                 maxHeight: { xs: "100vh", md: "100vh" },
                 bgcolor: "transparent",
                 outline: "none",
@@ -188,7 +188,6 @@ export default function EntryCard({
                 sx={{
                   width: "100%",
                   height: { xs: "60vh", md: "90vh" },
-                  maxWidth: "1800px",
                   maxHeight: "100vh",
                   borderRadius: "16px",
                   overflow: "hidden",
