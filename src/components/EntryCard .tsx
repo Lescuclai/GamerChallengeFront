@@ -8,7 +8,6 @@ import {
   Box,
   Card,
   CardContent,
-  Chip,
   IconButton,
   Modal,
   Snackbar,
@@ -126,9 +125,7 @@ export default function EntryCard({
             }}
           />
 
-          {isOwner && <Chip clickable label="EDITER" color="primary" />}
-
-          {isLoggedIn && (
+          {isLoggedIn && isOwner && (
             <Box>
               <IconButton
                 aria-label="modifier"
