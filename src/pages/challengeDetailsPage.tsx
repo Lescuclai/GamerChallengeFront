@@ -9,8 +9,10 @@ import {
   CircularProgress,
   IconButton,
   Typography,
+  Alert,
+  Snackbar,
 } from "@mui/material"
-import { useMutation, useQueries } from "@tanstack/react-query"
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router"
 import { ChallengeDelete } from "../components/ChallengeDelete"
@@ -28,6 +30,7 @@ interface HorizontalCardProps {
 export const ChallengeDetailsPage = ({
   img = "https:images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
 }: HorizontalCardProps) => {
+  const queryClient = useQueryClient()
   const currentUser = useAuthStore((state) => state.user)
   const { challengeId } = useParams()
   const isLogIn = useAuthStore((state) => state.isLoggedIn)
@@ -79,6 +82,29 @@ export const ChallengeDetailsPage = ({
     setLiked(res.voted)
   }
 
+  const deleteEntryMutation = useMutation({
+    mutationFn: (entryId: number) => EntryService.deleteEntry(entryId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["challengeEntries", challengeId, currentUser?.id],
+        exact: true,
+      })
+      await queryClient.refetchQueries({ type: "active" })
+    },
+  })
+
+  const handleEntryDelete = async (entry_id: number) => {
+    try {
+      await deleteEntryMutation.mutateAsync(entry_id)
+      setSnackbarMessage("Participation supprimée avec succès !")
+      setSnackbarOpen(true)
+    } catch (error) {
+      console.error(error)
+      setSnackbarMessage("Erreur lors de la suppression")
+      setSnackbarOpen(true)
+    }
+  }
+
   // const [version, setVersion] = useState(0)
 
   // useEffect(() => {
@@ -86,6 +112,9 @@ export const ChallengeDetailsPage = ({
   //     setVersion((v) => v + 1)
   //   }
   // }, [entries])
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState("")
 
   return (
     <Box
@@ -303,6 +332,7 @@ export const ChallengeDetailsPage = ({
                         entry_id={entry_id}
                         isOwner={true}
                         userHasVoted={userHasVoted ?? false}
+                        onDelete={handleEntryDelete}
                       />
                     )
                   )}
@@ -372,6 +402,23 @@ export const ChallengeDetailsPage = ({
             )}
           </Box>
         </Box>
+      </Box>
+
+      <Box>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={() => setSnackbarOpen(false)}
+            severity={snackbarMessage.includes("Erreur") ? "error" : "success"}
+            sx={{ width: "100%" }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Box>
     </Box>
   )

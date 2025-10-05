@@ -1,20 +1,17 @@
-import DeleteIcon from "@mui/icons-material/Delete"
+// import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import {
-  Alert,
   Avatar,
   Box,
   Card,
   CardContent,
-  Chip,
   IconButton,
   Modal,
-  Snackbar,
   Typography,
 } from "@mui/material"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import ReactPlayer from "react-player"
 import avatarDefault from "../assets/avatar.svg"
@@ -22,6 +19,7 @@ import { UpdateEntryModal } from "../components/forms/EntryForm"
 import EntryService from "../services/EntryService"
 import { useAuthStore } from "../stores/authStore"
 import type { UseFormInputs } from "./CreateEntryModal"
+import { EntryDelete } from "./EntryDelete"
 interface EntryCardProps {
   entry_id: number
   image?: string
@@ -31,6 +29,7 @@ interface EntryCardProps {
   isOwner: boolean
   userHasVoted: boolean
   entryData: UseFormInputs
+  onDelete?: (entryId: number) => void
 }
 
 export default function EntryCard({
@@ -42,6 +41,7 @@ export default function EntryCard({
   videoUrl,
   isOwner,
   userHasVoted,
+  onDelete,
 }: EntryCardProps) {
   const [liked, setLiked] = useState(userHasVoted)
   const isLogIn = useAuthStore((state) => state.isLoggedIn)
@@ -57,36 +57,14 @@ export default function EntryCard({
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState("")
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false)
-  const queryClient = useQueryClient()
-  const challengeId = entryData.challenge_id
-  const currentUser = useAuthStore((state) => state.user)
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
 
-  const deleteEntryMutation = useMutation({
-    mutationFn: (entryId: number) => EntryService.deleteEntry(entryId),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["challengeEntries", challengeId, currentUser?.id],
-        exact: true,
-      })
-      await queryClient.refetchQueries({ type: "active" })
-    },
-  })
-
   const handleDelete = async () => {
-    try {
-      await deleteEntryMutation.mutateAsync(entry_id)
-      setSnackbarMessage("Participation supprimée avec succès !")
-      setSnackbarOpen(true)
-      handleClose()
-    } catch (error) {
-      console.error(error)
-      setSnackbarMessage("Erreur lors de la suppression")
-      setSnackbarOpen(true)
+    if (onDelete) {
+      onDelete(entry_id)
     }
+    handleClose()
   }
 
   return (
@@ -126,9 +104,7 @@ export default function EntryCard({
             }}
           />
 
-          {isOwner && <Chip clickable label="EDITER" color="primary" />}
-
-          {isLoggedIn && (
+          {isLoggedIn && isOwner && (
             <Box>
               <IconButton
                 aria-label="modifier"
@@ -136,9 +112,10 @@ export default function EntryCard({
               >
                 <EditIcon sx={{ color: "var(--lavander)" }} />
               </IconButton>
-              <IconButton aria-label="supprimer" onClick={handleDelete}>
+              {/* <IconButton aria-label="supprimer" onClick={handleDelete}>
                 <DeleteIcon sx={{ color: "red" }} />
-              </IconButton>
+              </IconButton> */}
+              <EntryDelete onDelete={handleDelete} />
             </Box>
           )}
         </Box>
@@ -197,7 +174,7 @@ export default function EntryCard({
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: { xs: "100vw", md: "90vw" },
+                width: { xs: "90vw", md: "80vw" },
                 maxHeight: { xs: "100vh", md: "100vh" },
                 bgcolor: "transparent",
                 outline: "none",
@@ -211,7 +188,6 @@ export default function EntryCard({
                 sx={{
                   width: "100%",
                   height: { xs: "60vh", md: "90vh" },
-                  maxWidth: "1800px",
                   maxHeight: "100vh",
                   borderRadius: "16px",
                   overflow: "hidden",
@@ -259,23 +235,6 @@ export default function EntryCard({
           />
         </CardContent>
       </Card>
-
-      <Box>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={3000}
-          onClose={() => setSnackbarOpen(false)}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <Alert
-            onClose={() => setSnackbarOpen(false)}
-            severity={snackbarMessage.includes("Erreur") ? "error" : "success"}
-            sx={{ width: "100%" }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
-      </Box>
     </>
   )
 }
