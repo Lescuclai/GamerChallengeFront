@@ -4,8 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc -b && vite build",
+    "docker:up:dev": "docker-compose -f docker-compose.dev.yml up -d --build",
+    "docker:down:dev": "docker-compose -f docker-compose.dev.yml up -d ",
     "lint": "eslint .",
     "preview": "vite preview",
     "prepare": "husky",
@@ -46,6 +48,6 @@
     "tailwindcss": "^4.1.13",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
-    "vite": "^7.1.2"
+    "vite": "^7.1.9"
   }
 }
