@@ -2,8 +2,16 @@ import axios from "axios"
 import AuthService from "./AuthService"
 import { useAuthStore } from "../stores/authStore"
 
+const API_URL =
+  import.meta.env.MODE === "production"
+    ? import.meta.env.VITE_API_URL_EXTERNAL
+    : import.meta.env.VITE_API_URL
+
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
   withCredentials: true,
 })
 
@@ -17,7 +25,6 @@ axiosClient.interceptors.response.use(
       !request.url?.includes("/refresh")
     ) {
       request._retry = true
-
       try {
         const newToken = await AuthService.getNewAccessToken()
         if (newToken !== null) {
