@@ -5,3 +5,4 @@ RUN npm install
 COPY . .
 EXPOSE 3000
 CMD ["npm", "run", "dev", "--", "--host"]
+# npm run dev -- --host rend Vite accessible depuis l’extérieur du conteneur.

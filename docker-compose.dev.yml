@@ -11,7 +11,13 @@ services:
       - /app/node_modules
     environment:
       - HOST=0.0.0.0
+      # Permet à Vite d'écouter sur toutes les interfaces réseau.
+      # Par défaut, Vite n'écoute que sur localhost, ce qui empêche l'accès depuis l'extérieur du conteneur Docker.
       - VITE_API_URL=http://localhost:5000/api
+    # Et non pas gamer-challenges-api.
+    # En effet, depuis notre navigateur, localhost:5000 correspond au port exposé de notre conteneur back sur ta machine.
+    # Si tu utilisais gamer-challenges-api, notre navigateur essaierait de se connecter à ce nom d'hôte,
+    # qui ne serait pas résolu correctement en dehors du réseau Docker.
     command: npm run dev -- --host
     restart: unless-stopped
     networks:
@@ -20,3 +26,14 @@ services:
 networks:
   gamerchallenge-network:
     external: true
+# Si front et back tournent dans Docker, mais dans des projets différents,
+# alors on doit créer un réseau Docker partagé entre les deux projets et y connecter les conteneurs.
+# Pour créer un réseau Docker externe, on peut utiliser la commande suivante :
+# docker network create <nom_du_reseau>
+# Il faudra le créer une seule fois avant de lancer les conteneurs des deux projets.
+# Pour vérifier les réseaux existants : docker network ls
+# Pour vérifier quels sont les conteneurs connectés : docker network inspect <nom_du_reseau>
+# Pour connecter un conteneur à un réseau existant : docker network connect <nom_du_reseau> <nom_du_conteneur>
+# Supprimer un réseau : docker network rm <nom_du_reseau>
+# il faudra avant de le supprimer, supprimer tous les conteneurs qui y sont connectés et leurs volumes associés, avec la commande :
+# docker-compose down -v

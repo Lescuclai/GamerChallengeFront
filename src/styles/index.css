@@ -7,11 +7,11 @@
   --jet: #333333;
   --danger-red: #d32f2f;
   --custom-slate-blue: #6b6bff;
-  --margin-desktop: 80px;
-  --margin-desktop-elements: 50px;
+  --margin-desktop: 50px;
+  --margin-desktop-elements: 30px;
   --margin-cards: 5px;
-  --margin-mobile: 75px;
-  --margin-mobile-elements: 25px;
+  --margin-mobile: 40px;
+  --margin-mobile-elements: 20px;
   font-family: "Nunito Sans", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
