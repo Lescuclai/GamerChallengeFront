@@ -73,12 +73,10 @@ export default function EntryCard({
         sx={{
           backgroundColor: "var(--jet)",
           color: "var(--lavander)",
-
           maxWidth: {
             xs: "280px",
             md: "450px",
           },
-
           minWidth: {
             xs: "280px",
             md: "300px",
@@ -112,9 +110,6 @@ export default function EntryCard({
               >
                 <EditIcon sx={{ color: "var(--lavander)" }} />
               </IconButton>
-              {/* <IconButton aria-label="supprimer" onClick={handleDelete}>
-                <DeleteIcon sx={{ color: "red" }} />
-              </IconButton> */}
               <EntryDelete onDelete={handleDelete} />
             </Box>
           )}
@@ -136,7 +131,7 @@ export default function EntryCard({
             marginBottom={2}
             sx={{
               display: "-webkit-box",
-              WebkitLineClamp: { xs: 2, md: 3 }, // Limite de lignes
+              WebkitLineClamp: { xs: 2, md: 3 }, // Limite nombre de lignes, pour ce faire il faut aussi les 3 propriétés suivantes
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
               textOverflow: "ellipsis",

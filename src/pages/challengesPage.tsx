@@ -69,7 +69,7 @@ export const ChallengesPage = () => {
           },
         }}
       >
-        <Typography variant="h4" sx={{ textAlign: "center" }}>
+        <Typography variant="h5" sx={{ textAlign: "center" }}>
           Liste des challenges
         </Typography>
         {isLoggedIn && (

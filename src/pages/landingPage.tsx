@@ -45,7 +45,7 @@ export const LandingPage = () => {
           },
         }}
       >
-        <div className="flex flex-col text-center justify-evenly items-center bg-amber- max-w-[1056px] h-[250px] sm:h-[400px]">
+        <div className="flex flex-col text-center justify-evenly items-center bg-amber- max-w-[1056px] h-[250px] sm:h-[350px]">
           <div className="sm:h-[201px]">
             <h1 className="text-[36px] sm:text-[48px]">GamerChallenges</h1>
             <p className="max-w-[486px] ">
